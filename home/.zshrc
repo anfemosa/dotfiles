@@ -1,10 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 #zmodload zsh/zprof
 
 # If you come from bash you might have to change your $PATH.
@@ -40,7 +33,19 @@ antigen bundle zsh-users/zsh-autosuggestions
 
 antigen apply
 
-#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
+
+# Override globalalias config
+# space expands all aliases, including global
+bindkey -M emacs "^ " globalias
+bindkey -M viins "^ " globalias
+
+# control-space to make a normal space
+bindkey -M emacs " " magic-space
+bindkey -M viins " " magic-space
+
+# normal space during searches
+bindkey -M isearch " " magic-space
 
 # command-line fuzzy finder
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -71,10 +76,10 @@ export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 export EDITOR="code -r"
 
 # Include dotfiles
-source ${HOME}/srcs/development_environment/dotfiles/git.bash
-source ${HOME}/srcs/development_environment/dotfiles/docker.bash
-source ${HOME}/srcs/development_environment/dotfiles/ros.bash
-source ${HOME}/srcs/development_environment/dotfiles/system.bash
+source "$HOME/.homesick/repos/dotfiles/git.sh"
+source "$HOME/.homesick/repos/dotfiles/docker.sh"
+source "$HOME/.homesick/repos/dotfiles/ros.sh"
+source "$HOME/.homesick/repos/dotfiles/system.sh"
 
 eval "$(direnv hook zsh)"
 
