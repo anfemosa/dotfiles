@@ -1,0 +1,1 @@
+/home/andres/srcs/development_environment/dotfiles/.bashrc
