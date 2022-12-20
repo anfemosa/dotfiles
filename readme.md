@@ -27,11 +27,12 @@ Some applications that I rely on.
 
 ### From apt
 
-- AutoKey
-- copyq - Clipboard Manager with Advanced Features
-- imwheel
-- meld
-- recoll
+- AutoKey - Desktop automation utility for Linux and X11. ***sudo apt install "autokey*"***
+- copyq - Clipboard Manager with Advanced Features. ***sudo apt install copyq***
+- imwheel - Universal  mouse  wheel  and  button  translator for the X Windows System. ***sudo apt install imwheel***
+- meld - Graphical tool to diff and merge files. ***sudo apt install meld***
+- recoll - Personal full text search package. ***sudo apt install recoll***
+- neovim - Heavily refactored vim fork. ***sudo apt install neovim***
 
 ### From snapcraft
 
@@ -39,7 +40,6 @@ Some applications that I rely on.
 - [CloudCompare](https://www.danielgm.net/cc/)
 - docfetcher
 - freeplane-mindmapping
-- neovim
 - ripgrep
 - spotify
 - zotero-snap
