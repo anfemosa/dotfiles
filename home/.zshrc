@@ -35,18 +35,6 @@ antigen apply
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
 
-# Override globalalias config
-# space expands all aliases, including global
-bindkey -M emacs "^ " globalias
-bindkey -M viins "^ " globalias
-
-# control-space to make a normal space
-bindkey -M emacs " " magic-space
-bindkey -M viins " " magic-space
-
-# normal space during searches
-bindkey -M isearch " " magic-space
-
 # command-line fuzzy finder
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
