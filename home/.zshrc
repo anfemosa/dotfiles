@@ -40,8 +40,6 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
 # *********************
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-#zprof
-
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
@@ -79,3 +77,5 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+#zprof

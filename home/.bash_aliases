@@ -39,8 +39,8 @@ alias docker_run_ssh_auth='docker run -it --volume $SSH_AUTH_SOCK:/ssh-agent --e
 alias docker_run_x11_ssh_auth='docker run -it --volume $SSH_AUTH_SOCK:/ssh-agent --env SSH_AUTH_SOCK=/ssh-agent -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix'
 
 # Vagrant
-alias vagrant_resume_all='vagrant global-status | awk "/saved/{print \$1}" | xargs -r -d "\n" -n 1 -- vagrant resume'
-alias vagrant_suspend_all='vagrant global-status | awk "/running/{print \$1}" | xargs -r -d "\n" -n 1 -- vagrant suspend'
+#alias vagrant_resume_all='vagrant global-status | awk "/saved/{print \$1}" | xargs -r -d "\n" -n 1 -- vagrant resume'
+#alias vagrant_suspend_all='vagrant global-status | awk "/running/{print \$1}" | xargs -r -d "\n" -n 1 -- vagrant suspend'
 
 # By file extension
 alias -s {md,adoc}='code'
