@@ -1,7 +1,7 @@
 #zmodload zsh/zprof
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/apps:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
@@ -35,21 +35,20 @@ antigen apply
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
 
+# *********************
 # command-line fuzzy finder
+# *********************
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-source $HOME/.init_shell
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
 
 #zprof
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-#export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" . $HOME"
 export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
+
+# *********************
+# zsh cache compdump
+# *********************
 
 # Create a cache folder if it isn't exists
 if [ ! -d "$HOME/.cache/zsh" ]; then
@@ -59,15 +58,24 @@ fi
 # Define a custom file for compdump
 export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 
+# *********************
 # User configuration
+# *********************
 
+# Use code as default editor
 export EDITOR="code -r"
+
+source $HOME/.init_shell
 
 # Include dotfiles
 source "$HOME/.homesick/repos/dotfiles/home/git.sh"
 source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
 source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
 source "$HOME/.homesick/repos/dotfiles/home/system.sh"
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

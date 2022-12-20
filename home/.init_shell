@@ -7,4 +7,6 @@ export HISTSIZE=1000000
 
 export HISTFILE=~/.bash_eternal_history
 
+export PROMPT_COMMAND='LAST_COMMAND_EXIT=$? && history -a && test 127 -eq $LAST_COMMAND_EXIT && head -n -2 $HISTFILE >${HISTFILE}_temp && mv ${HISTFILE}_temp $HISTFILE'
+
 $HOME/.homesick/repos/homeshick/bin/homeshick --quiet refresh 2

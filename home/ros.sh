@@ -99,4 +99,4 @@ else
     fi
 fi
 
-alias sc=sourcethis
+#alias sc=sourcethis
