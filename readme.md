@@ -2,18 +2,18 @@
 
 ## What is this
 
-https://github.com/andsens/homeshick
+A backup of my dot and config files using [homeshick](https://github.com/andsens/homeshick)
 
 ## Bootstrap a machine
 
-```
+``` bash
 git clone https://github.com/andsens/homeshick.git $HOME/.homesick/repos/homeshick
-$HOME/.homesick/repos/homeshick/bin/homeshick clone jonazpiazu/dotfiles
+$HOME/.homesick/repos/homeshick/bin/homeshick clone anfemosa/dotfiles
 ```
 
 ## Usage
 
-```
+``` bash
 source ~/.homesick/repos/homeshick/homeshick.sh
 homeshick track dotfiles .bashrc
 homeshick cd dotfiles

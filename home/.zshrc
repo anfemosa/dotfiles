@@ -12,7 +12,7 @@ COMPLETION_WAITING_DOTS="true"
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 
-source ~/antigen.zsh
+source ~/apps/antigen.zsh
 antigen use oh-my-zsh
 
 antigen theme romkatv/powerlevel10k
@@ -76,15 +76,10 @@ export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 export EDITOR="code -r"
 
 # Include dotfiles
-source "$HOME/.homesick/repos/dotfiles/git.sh"
-source "$HOME/.homesick/repos/dotfiles/docker.sh"
-source "$HOME/.homesick/repos/dotfiles/ros.sh"
-source "$HOME/.homesick/repos/dotfiles/system.sh"
-
-eval "$(direnv hook zsh)"
+source "$HOME/.homesick/repos/dotfiles/home/git.sh"
+source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
+source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
+source "$HOME/.homesick/repos/dotfiles/home/system.sh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# Finalize Powerlevel10k instant prompt. Should stay at the bottom of ~/.zshrc.
-(( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
