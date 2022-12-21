@@ -59,6 +59,7 @@ sudo apt install appimagelauncher
 - [bat](https://github.com/sharkdp/bat.git)
 - [lsd](https://github.com/Peltoche/lsd.git)
 - [iscan-bundle](https://support.epson.net/linux/en/iscan_c.php?version=2.30.4)
+- [Mendeley](https://www.mendeley.com/download-reference-manager/linux): AppImage
 
 - [Albert launcher](https://albertlauncher.github.io/installing/): Desktop agnostic launcher
 - [freeplane-mindmapping](https://sourceforge.net/projects/freeplane/): Application for Mind Mapping, Knowledge Management, Project Management
