@@ -31,6 +31,8 @@ alias docker_run_x11_ssh_auth='docker run -it --volume $SSH_AUTH_SOCK:/ssh-agent
 # By file extension
 alias -s {md,adoc}='code'
 
+alias hshick='homeshick'
+
 # Flatkpak aliases
 alias gimp="org.gimp.GIMP"
 alias libreoffice="org.libreoffice.LibreOffice"

@@ -39,17 +39,13 @@ Some useful applications:
 
 ### Download from the website
 
-- [docfetcher](https://sourceforge.net/projects/docfetcher/): Desktop search application.
-- [freeplane-mindmapping](https://sourceforge.net/projects/freeplane/): Application for Mind Mapping, Knowledge Management, Project Management.
-- [Albert launcher](https://albertlauncher.github.io/installing/): Desktop agnostic launcher.
-- [Davmail](http://davmail.sourceforge.net/): POP/IMAP/SMTP/Caldav/Carddav/LDAP Exchange and Office 365 Gateway.
-- [fd](https://github.com/sharkdp/fd): simple, fast and user-friendly alternative to find.
-
-- [VSCode](https://code.visualstudio.com/): VS Code.
-- [VSCodium](https://vscodium.com/): Free/Libre Open Source Software Binaries of VS Code.
+- [Brave Browser](https://brave.com/es/linux/): Yet another web browser
+- [VSCode](https://code.visualstudio.com/): VS Code
+- [ShellCheck](https://github.com/koalaman/shellcheck): A static analysis tool for shell scripts
 - [Microsoft Teams](https://www.microsoft.com/en-us/microsoft-teams/download-app#allDevicesSection)
 
-- AppImageLauncher: makes your Linux desktop AppImage ready -->
+- [fd](https://github.com/sharkdp/fd): simple, fast and user-friendly alternative to find
+- [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher): makes your Linux desktop AppImage ready -->
 
 ``` bash
 sudo add-apt-repository ppa:appimagelauncher-team/stable
@@ -57,18 +53,51 @@ sudo apt update
 sudo apt install appimagelauncher
 ```
 
-- [ShellCheck](https://github.com/koalaman/shellcheck): A static analysis tool for shell scripts
+- [checkingplaneitor](https://git.code.tecnalia.com:unai.antero/checkingplaneitor)
+- [qpdf](https://github.com/qpdf/qpdf): command-line tool and C++ library that performs content-preserving transformations on PDF files
+- [pdfmixtool](https://gitlab.com:scarpetta/pdfmixtool) v1.0.2 functional in Ubuntu 20.04
+- [bat](https://github.com/sharkdp/bat.git)
+- [lsd](https://github.com/Peltoche/lsd.git)
+- [iscan-bundle](https://support.epson.net/linux/en/iscan_c.php?version=2.30.4)
 
-- [GitAhead is a graphical Git client](https://gitahead.github.io/gitahead.com/)
-- [FreeFileSync](https://freefilesync.org/)
-- [Rclone - rsync for cloud storage](https://rclone.org/downloads/): can mount OneDrive using FUSE
+- [Albert launcher](https://albertlauncher.github.io/installing/): Desktop agnostic launcher
+- [freeplane-mindmapping](https://sourceforge.net/projects/freeplane/): Application for Mind Mapping, Knowledge Management, Project Management
+- [docfetcher](https://sourceforge.net/projects/docfetcher/): Desktop search application
+- [GitAhead](https://gitahead.github.io/gitahead.com/):  A graphical Git client
+- [Davmail](http://davmail.sourceforge.net/): POP/IMAP/SMTP/Caldav/Carddav/LDAP Exchange and Office 365 Gateway
+- [FreeFileSync](https://freefilesync.org/): Better on windows
+- [Rclone](https://rclone.org/downloads/):  rsync for cloud storage, can mount OneDrive using FUSE
 - [yEd - Graph Editor](https://www.yworks.com/products/yed)
 - [PlantUML](https://plantuml.com/)
+- [umlet](https://www.umlet.com/): UML tool with a simple user interface, also for code
 - [Kdenlive video editor](https://kdenlive.org/en/download/) (AppImage)
 - [restic bacup](https://github.com/restic/restic/releases)
-- [ngrok](https://ngrok.com/):  secure introspectable tunnels to localhost.
+- [ngrok](https://ngrok.com/):  secure introspectable tunnels to localhost
+- [VSCodium](https://vscodium.com/): Free/Libre Open Source Software Binaries of VS Code
+- [asciinema edit](https://github.com/cirocosta/asciinema-edit): Auxiliary tools for dealing with ASCIINEMA casts
 
-- [asciinema edit](https://github.com/cirocosta/asciinema-edit): Auxiliary tools for dealing with ASCIINEMA casts.
+- [gdm-tools](https://github.com/realmazharhussain/gdm-tools.git)
+- [plymouth-theme](https://github.com/pop-os/plymouth-theme.git)
+- [pop-fonts](https://github.com/pop-os/fonts.git)
+- [pop-theme](https://github.com/pop-os/gtk-theme)
+- [vortex-ubuntu-plymouth-theme](https://github.com/emanuele-scarsella/vortex-ubuntu-plymouth-theme.git)
+- [disk-usage-space](https://github.com/anfemosa/disk-usage-space.git)
+
+- [powerlevel10k](https://github.com/romkatv/powerlevel10k)
+
+``` text
+https://phuctm97.com/blog/zsh-antigen-ohmyzsh
+https://github.com/zsh-users
+https://github.com/mattmc3/zdotdir
+```
+
+- [Antidote](https://github.com/mattmc3/antidote)
+
+``` bash
+git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
+```
+
+- [zsh-you-shuould-use](https://github.com/MichaelAquilina/zsh-you-should-use.git)
 
 ### From snapcraft
 
@@ -79,8 +108,10 @@ sudo apt install snapd
 
 - spotify
 - docfetcher ***sudo snap install docfetcher***
+- telegram-desktop ***current installation method***
 
 ### From Flatpak
 
 - gimp
 - libre-office
+- telegram-desktop ***preferred installation method***
