@@ -1,1 +1,28 @@
-/home/andres/srcs/development_environment/dotfiles/terminator/config
+[global_config]
+  window_state = maximise
+  borderless = True
+  tab_position = hidden
+  title_hide_sizetext = True
+  title_use_system_font = False
+  title_font = Hack NF Bold 12
+[keybindings]
+[profiles]
+  [[default]]
+    cursor_shape = ibeam
+    cursor_color = "#aaaaaa"
+    font = Hack Nerd Font Mono 12
+    show_titlebar = False
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    custom_command = byobu
+    use_system_font = False
+    copy_on_selection = True
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]
