@@ -43,6 +43,12 @@ Some useful applications:
 - [VSCode](https://code.visualstudio.com/): VS Code
 - [ShellCheck](https://github.com/koalaman/shellcheck): A static analysis tool for shell scripts
 - [Microsoft Teams](https://www.microsoft.com/en-us/microsoft-teams/download-app#allDevicesSection)
+- [DB Browser for SQLite]
+- [Dconf Editor]
+- [SimpleScreenRecorder]
+- [Terminator]
+- [VLC]
+- [XPad]
 
 - [fd](https://github.com/sharkdp/fd): simple, fast and user-friendly alternative to find
 - [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher): makes your Linux desktop AppImage ready -->
