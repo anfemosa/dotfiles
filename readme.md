@@ -78,7 +78,7 @@ sudo apt install appimagelauncher
 - [PlantUML](https://plantuml.com/)
 - [umlet](https://www.umlet.com/): UML tool with a simple user interface, also for code
 - [Kdenlive video editor](https://kdenlive.org/en/download/) (AppImage)
-- [restic bacup](https://github.com/restic/restic/releases)
+- [restic backup](https://github.com/restic/restic/releases)
 - [ngrok](https://ngrok.com/):  secure introspectable tunnels to localhost
 - [VSCodium](https://vscodium.com/): Free/Libre Open Source Software Binaries of VS Code
 - [asciinema edit](https://github.com/cirocosta/asciinema-edit): Auxiliary tools for dealing with ASCIINEMA casts
