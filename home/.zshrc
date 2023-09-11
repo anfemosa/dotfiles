@@ -2,6 +2,7 @@
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/apps:$PATH
+export PATH=$HOME/apps/xela_server:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh

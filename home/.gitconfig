@@ -7,4 +7,4 @@
 	name = Andres Montano
 	email = andres.montano@tecnalia.com
 [credential]
-	helper = "!f() { /home/andres/.vscode-server/bin/e8a3071ea4344d9d48ef8a4df2c097372b0c5161/node /tmp/vscode-remote-containers-b73181828d917cf61f4a9b1052dc65e5398349e1.js $*; }; f"
+	helper = "!f() { /home/andres/.vscode-server/bin/704ed70d4fd1c6bd6342c436f1ede30d1cff4710/node /tmp/vscode-remote-containers-a8da651e-931f-486a-ab73-eff99a9e2d8c.js git-credential-helper $*; }; f"

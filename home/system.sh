@@ -41,4 +41,4 @@ then
 fi
 
 # Tecnalia T
-alias mountT='sudo mount -t cifs //tri.lan/tri /mnt/T --verbose -o username=110343,password=Bageera\#1983,workgroup=TRI.LAN'
+alias mountT='sudo mount -t cifs //tri.lan/tri /mnt/T --verbose -o username=110343,password=Iris\#1983,workgroup=TRI.LAN'
