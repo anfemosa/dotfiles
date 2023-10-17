@@ -17,7 +17,7 @@ function dockbuild(){
 # Run container with rocker
 # usage: rundock {noetic, melodic} [{remodel_ws, odin_ws}] [cmd]
 # To share docker --volume /var/run/docker.sock:/var/run/docker.sock:ro
-function rundock() {
+function dockrun() {
     # Check if the image exist
     if [[ "$(docker images -q devenv:$1 2> /dev/null)" == "" ]]; then
         # build the image
