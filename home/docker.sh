@@ -1,4 +1,6 @@
 # docker common commands
+export dockerfiles_DIR=~/srcs/development_environment/dockerfiles;
+
 alias dim="docker images"
 alias dpsa="docker ps -a"
 alias dps="docker ps"
@@ -10,13 +12,33 @@ alias dimp="docker image prune"
 # Build docker image
 # usage: dockbuild {noetic, melodic}
 function dockbuild(){
-	cd ~/srcs/development_environment/dockerfiles;
-	docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 -f devenv.Dockerfile .
+    if [ $# -lt 1 ]; then
+        echo "Usage: dockbuild <ROS_DISTRO> [build_args]"
+        echo "build_args:"
+        echo "      SHELL - zsh (default) or bash"
+        return 1
+    fi
+
+	cd $dockerfiles_DIR;
+
+    if [ $# -lt 2 ]; then
+        echo "Building ROS_DISTRO:"$1 "with SHELL_VERISON: zsh"
+        docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg SHELL="zsh" -f devenv.Dockerfile .
+    else
+        if [ $2 = "bash" ]; then
+            echo "Building ROS_DISTRO:"$1 "with SHELL_VERISON:"$2
+            docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg SHELL=$2 -f devenv.Dockerfile .
+        else
+            echo "SHELL_VERISON:"$2 "not supported"
+        fi
+    fi
 }
 
 # Run container with rocker
 # usage: rundock {noetic, melodic} [{remodel_ws, odin_ws}] [cmd]
+# ToDo Add extra parameters by arg
 # To share docker --volume /var/run/docker.sock:/var/run/docker.sock:ro
+# To share video (usb-cam) --volume /dev/video0:/dev/video0
 function dockrun() {
     # Check if the image exist
     if [[ "$(docker images -q devenv:$1 2> /dev/null)" == "" ]]; then
