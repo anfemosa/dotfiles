@@ -14,8 +14,14 @@ if [[ -z "${ROS_DISTRO}" ]]; then
     fi
 fi
 
-# Determine shell extension
-if [ -z $SHELL ]; then echo "SHELL not set"; else ext=$(basename ${SHELL}); fi
+# # Determine shell extension
+# if [ -z $SHELL ]; then
+#     echo "SHELL not set"
+#     export SHELL=/usr/bin/zsh
+#     ext=$(basename ${SHELL});
+# else
+#     ext=$(basename ${SHELL});
+# fi
 
 # Source rosmon
 function smon(){
@@ -26,8 +32,13 @@ function smon(){
 
 # cd to the root of the workspace
 function roshome(){
-    roscd && cd ..
-    ROS_HOME=${PWD}
+    if command -v roscd &> /dev/null
+    then
+        roscd && cd ..
+        ROS_HOME=${PWD}
+    else
+        echo "command ** roscd ** not found"
+    fi
 }
 
 # Source the current workspace
@@ -51,11 +62,17 @@ function sourcethis(){
 
 # Automatic catkin build
 function cb() {
-    pwd_cb=${PWD}
-    roshome
-    catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release -- "$@"
-    sourcethis
-    cd ${pwd_cb}
+    if [ "${ROS_VERSION}" = 1 ]
+    then
+        pwd_cb=${PWD}
+        roshome
+        catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release -- "$@"
+        sourcethis
+        cd ${pwd_cb}
+    else
+        colcon build --parallel-workers 6 "$@"
+        source ./install/setup.zsh
+    fi
 }
 
 # Clean workspace (delete the generated folders, then catkin build)

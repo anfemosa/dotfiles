@@ -10,6 +10,15 @@ bindkey -M viins " " magic-space
 # normal space during searches
 bindkey -M isearch " " magic-space
 
+# Determine shell extension
+if [ -z $SHELL ]; then
+    echo "SHELL not set"
+    export SHELL=/usr/bin/zsh
+    ext=$(basename ${SHELL});
+else
+    ext=$(basename ${SHELL});
+fi
+
 # lsd
 if command -v lsd &> /dev/null
 then

@@ -15,21 +15,21 @@ function dockbuild(){
     if [ $# -lt 1 ]; then
         echo "Usage: dockbuild <ROS_DISTRO> [build_args]"
         echo "build_args:"
-        echo "      SHELL - zsh (default) or bash"
+        echo "      EXT_SHELL - zsh (default) or bash"
         return 1
     fi
 
 	cd $dockerfiles_DIR;
 
     if [ $# -lt 2 ]; then
-        echo "Building ROS_DISTRO:"$1 "with SHELL_VERISON: zsh"
-        docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg SHELL="zsh" -f devenv.Dockerfile .
+        echo "Building ROS_DISTRO:"$1 "with SHELL_VERSION: zsh"
+        docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg EXT_SHELL="zsh" -f devenv.Dockerfile .
     else
         if [ $2 = "bash" ]; then
-            echo "Building ROS_DISTRO:"$1 "with SHELL_VERISON:"$2
-            docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg SHELL=$2 -f devenv.Dockerfile .
+            echo "Building ROS_DISTRO:"$1 "with SHELL_VERSION:"$2
+            docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg EXT_SHELL=$2 -f devenv.Dockerfile .
         else
-            echo "SHELL_VERISON:"$2 "not supported"
+            echo "SHELL_VERSION:"$2 "not supported"
         fi
     fi
 }

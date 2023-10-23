@@ -67,10 +67,10 @@ export EDITOR="code -r"
 source $HOME/.init_shell
 
 # Include dotfiles
+source "$HOME/.homesick/repos/dotfiles/home/system.sh"
 source "$HOME/.homesick/repos/dotfiles/home/git.sh"
 source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
 source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
-source "$HOME/.homesick/repos/dotfiles/home/system.sh"
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
