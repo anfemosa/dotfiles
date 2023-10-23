@@ -23,11 +23,11 @@ function dockbuild(){
 
     if [ $# -lt 2 ]; then
         echo "Building ROS_DISTRO:"$1 "with SHELL_VERSION: zsh"
-        docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg EXT_SHELL="zsh" -f devenv.Dockerfile .
+        docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg EXT_SHELL="zsh" --build-arg SHELL="/usr/bin/zsh" -f devenv.Dockerfile .
     else
         if [ $2 = "bash" ]; then
             echo "Building ROS_DISTRO:"$1 "with SHELL_VERSION:"$2
-            docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg EXT_SHELL=$2 -f devenv.Dockerfile .
+            docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg EXT_SHELL="bash" --build-arg SHELL="/bin/bash" -f devenv.Dockerfile .
         else
             echo "SHELL_VERSION:"$2 "not supported"
         fi

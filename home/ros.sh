@@ -14,14 +14,16 @@ if [[ -z "${ROS_DISTRO}" ]]; then
     fi
 fi
 
-# # Determine shell extension
-# if [ -z $SHELL ]; then
-#     echo "SHELL not set"
-#     export SHELL=/usr/bin/zsh
-#     ext=$(basename ${SHELL});
-# else
-#     ext=$(basename ${SHELL});
-# fi
+# Determine shell extension
+if [ ! -z $EXT_SHELL ]; then
+    if [ -z $SHELL ]; then
+        echo "SHELL not set"
+        export SHELL=/usr/bin/zsh
+        ext=$(basename ${SHELL});
+    else
+        ext=$(basename ${SHELL});
+    fi
+fi
 
 # Source rosmon
 function smon(){
