@@ -45,7 +45,12 @@ function roshome(){
 
 # Source the current workspace
 function sourcews(){
-    source ./devel/setup.${ext} && smon
+    if [ "${ROS_VERSION}" = 1 ]
+    then
+        source ./devel/setup.${ext} && smon
+    else
+        source ./install/setup.${ext}
+    fi
 }
 
 # Source the current workspace
@@ -79,7 +84,12 @@ function cb() {
 
 # Clean workspace (delete the generated folders, then catkin build)
 function cbclean(){
-    roshome && rm -rf build devel install && catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release
+    if [ "${ROS_VERSION}" = 1 ]
+    then
+        roshome && rm -rf build devel install && catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release
+    else
+        rm -rf build log install && cb "$@"
+    fi
 }
 
 # Initialize catkin workspace, configure and build it

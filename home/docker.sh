@@ -14,6 +14,8 @@ alias dimp="docker image prune"
 function dockbuild(){
     if [ $# -lt 1 ]; then
         echo "Usage: dockbuild <ROS_DISTRO> [build_args]"
+        echo "ROS_DISTRO:"
+        echo "      melodic, noetic, humble, etc."
         echo "build_args:"
         echo "      EXT_SHELL - zsh (default) or bash"
         return 1
@@ -39,7 +41,23 @@ function dockbuild(){
 # ToDo Add extra parameters by arg
 # To share docker --volume /var/run/docker.sock:/var/run/docker.sock:ro
 # To share video (usb-cam) --volume /dev/video0:/dev/video0
+# To share pcan --volume /dev/pcanusb32:/dev/pcanusb32
 function dockrun() {
+    if [ $# -lt 1 ]; then
+        echo "Usage: dockrun <ROS_DISTRO> [posicional options]"
+        echo "ROS_DISTRO:"
+        echo "      melodic, noetic, humble, etc."
+        echo "Options:"
+        echo "      Passing 1 option   --> path_to_workspace. E.g., dockrun humble mairon_ws"
+        echo "      Passing 2 options  --> path_to_workspace + extra_config. E.g., dockrun humble mairon_ws video"
+        echo "          extra_config: pcan, video, pcan_video"
+        echo "Examples:"
+        echo "dockrun humble mairon_ws"
+        echo "dockrun noetic neurondones_ws pcan_video"
+        echo "dockrun melodic odinrobot_ws video"
+        return 1
+    fi
+
     # Check if the image exist
     if [[ "$(docker images -q devenv:$1 2> /dev/null)" == "" ]]; then
         # build the image
@@ -53,7 +71,41 @@ function dockrun() {
     else
         # Launch container
         cd ~/ros/$1/$2;
-        rocker --home --ssh --git --user --privileged --nvidia --x11 --network host --name $1 devenv:$1 $3
+
+        if [ $# -lt 5 ]; then
+            rocker --home --ssh --git --user --privileged --nvidia --x11 --network host --name $1 devenv:$1
+        else
+            if [ $3 = "pcan" ]; then
+                rocker --home --ssh --git --user --privileged --nvidia --x11 --volume /dev/pcanusb32:/dev/pcanusb32 --network host --name $1 devenv:$1
+            else
+            fi
+        fi
+    fi
+}
+
+function dockexec() {
+    if [ $# -lt 1 ]; then
+        echo "Usage: dockexec <ROS_DISTRO> [workspace] [command]"
+        echo "ROS_DISTRO:"
+        echo "      melodic, noetic, humble, etc."
+        echo "Example:"
+        echo "dockexec noetic neurondones_ws roscore"
+        return 1
+    fi
+
+    # Check if the image exist
+    if [[ "$(docker images -q devenv:$1 2> /dev/null)" == "" ]]; then
+        # build the image
+        echo "Docker image for ${1} does not exist"
+    fi
+
+    # Check if the container exist
+    if [[ $(docker ps -aq -f name=$1) ]]; then
+        # Attach to conayiner
+        docker exec -it $1 bash -c "cd ~/ros/$1/$2 && $ext"
+    else
+        # Launch container
+        echo "Container for ${1} does not exist"
     fi
 }
 
