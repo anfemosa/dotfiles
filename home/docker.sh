@@ -9,6 +9,15 @@ alias drmi="docker rmi"
 alias dsp="docker system prune --all"
 alias dimp="docker image prune"
 
+# Determine shell extension
+if [ -z $SHELL ]; then
+    echo "SHELL not set"
+    export SHELL=/usr/bin/zsh
+    ext=$(basename ${SHELL});
+else
+    ext=$(basename ${SHELL});
+fi
+
 # Build docker image
 # usage: dockbuild {noetic, melodic}
 function dockbuild(){
@@ -66,13 +75,17 @@ function dockrun() {
 
     # Check if the container exist
     if [[ $(docker ps -aq -f name=$1) ]]; then
-        # Attach to conayiner
-        docker exec -it $1 bash -c "cd ~/ros/$1/$2 && $ext"
+        # Attach to container
+        if [ $# -lt 2 ]; then
+            docker exec -it $1 bash -c "cd ~/ros/$1 && $ext"
+        else
+            docker exec -it $1 bash -c "cd ~/ros/$1/$2 && $ext"
+        fi
     else
         # Launch container
         cd ~/ros/$1/$2;
 
-        if [ $# -lt 5 ]; then
+        if [ $# -lt 4 ]; then
             rocker --home --ssh --git --user --privileged --nvidia --x11 --network host --name $1 devenv:$1
         else
             if [ $3 = "pcan" ]; then
@@ -97,12 +110,17 @@ function dockexec() {
     if [[ "$(docker images -q devenv:$1 2> /dev/null)" == "" ]]; then
         # build the image
         echo "Docker image for ${1} does not exist"
+        return 1
     fi
 
     # Check if the container exist
     if [[ $(docker ps -aq -f name=$1) ]]; then
-        # Attach to conayiner
-        docker exec -it $1 bash -c "cd ~/ros/$1/$2 && $ext"
+        # Attach to container
+        if [ $# -lt 2 ]; then
+            docker exec -it $1 bash -c "cd ~/ros/$1 && $ext"
+        else
+            docker exec -it $1 bash -c "cd ~/ros/$1/$2 && $ext"
+        fi
     else
         # Launch container
         echo "Container for ${1} does not exist"
