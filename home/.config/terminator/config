@@ -9,7 +9,6 @@
 [profiles]
   [[default]]
     cursor_shape = ibeam
-    cursor_color = "#aaaaaa"
     font = Hack Nerd Font Mono 12
     show_titlebar = False
     scrollbar_position = hidden
@@ -25,4 +24,75 @@
     [[[child1]]]
       type = Terminal
       parent = window0
+  [[four_terminals]]
+    [[[child0]]]
+      type = Window
+      parent = ""
+      order = 0
+      position = 0:0
+      maximised = True
+      fullscreen = False
+      size = 1920, 1040
+      title = man terminator
+      last_active_window = False
+    [[[child1]]]
+      type = Notebook
+      parent = child0
+      order = 0
+      labels = None, None
+      last_active_term = 1e756680-c67a-46e7-b789-1256e436c5b3, e8aadb47-3233-487d-9abc-da3e6498d98b
+      active_page = 0
+    [[[child2]]]
+      type = VPaned
+      parent = child1
+      order = 0
+      position = 212
+      ratio = 0.20522749273959343
+    [[[child3]]]
+      type = HPaned
+      parent = child2
+      order = 0
+      position = 957
+      ratio = 0.5002613695765813
+    [[[terminal4]]]
+      type = Terminal
+      parent = child3
+      order = 0
+      profile = default
+      uuid = 8c339ab6-5259-47de-9717-fc055526ad51
+    [[[terminal5]]]
+      type = Terminal
+      parent = child3
+      order = 1
+      profile = default
+      uuid = d5a1407e-603e-4f45-ad4e-85f55861fdcb
+    [[[terminal6]]]
+      type = Terminal
+      parent = child2
+      order = 1
+      profile = default
+      uuid = 1e756680-c67a-46e7-b789-1256e436c5b3
+    [[[terminal7]]]
+      type = Terminal
+      parent = child1
+      order = 1
+      profile = default
+      uuid = e8aadb47-3233-487d-9abc-da3e6498d98b
+    [[[child8]]]
+      type = Window
+      parent = ""
+      order = 0
+      position = 3840:0
+      maximised = True
+      fullscreen = False
+      size = 1920, 1040
+      title = andres@WKM0125A:~/srcs/development_environment/dockerfiles
+      last_active_term = f056665f-0d9b-4ad9-9b61-efe84b4949d0
+      last_active_window = True
+    [[[terminal9]]]
+      type = Terminal
+      parent = child8
+      order = 0
+      profile = default
+      uuid = f056665f-0d9b-4ad9-9b61-efe84b4949d0
 [plugins]

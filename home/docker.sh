@@ -88,8 +88,16 @@ function dockrun() {
         if [ $# -lt 4 ]; then
             rocker --home --ssh --git --user --privileged --nvidia --x11 --network host --name $1 devenv:$1
         else
+            if [ $3 = "dev" ]; then
+                rocker --home --ssh --git --user --privileged --nvidia --x11 --volume /dev:/dev --network host --name $1 devenv:$1
+            else
+            fi
             if [ $3 = "pcan" ]; then
                 rocker --home --ssh --git --user --privileged --nvidia --x11 --volume /dev/pcanusb32:/dev/pcanusb32 --network host --name $1 devenv:$1
+            else
+            fi
+            if [ $3 = "video" ]; then
+                rocker --home --ssh --git --user --privileged --nvidia --x11 --volume /dev/video0:/dev/video0 --network host --name $1 devenv:$1
             else
             fi
         fi
