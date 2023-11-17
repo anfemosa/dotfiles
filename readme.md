@@ -119,6 +119,11 @@ sudo apt install snapd
 
 ### From Flatpak
 
+``` bash
+flatpak install flathub <package>
+```
+
 - gimp
 - libre-office
 - telegram-desktop ***preferred installation method***
+- PDFMixTool (eu.scarpetta.PDFMixTool)
