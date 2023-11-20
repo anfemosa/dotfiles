@@ -78,9 +78,9 @@ function dockrun() {
         echo "      melodic, noetic, humble, etc."
         echo "Options:"
         echo "      --ws: path to workspace. e.g. odin_ws"
-        echo "      --share: resource to share with the container. e.g. /dev/video0, /dev/pcanusb32, /dev"
+        echo "      --share: resource to share with the container, e.g. video, pcan or dev"
         echo "      --shell: shell to use in the container. By default zsh"
-        echo "      --parse: parse_args to use in the container. By default none"
+        echo "      --parse: parse_args to use in the container, e.g. --oyr-spacenav. By default none"
         echo "Examples:"
         echo "dockrun humble --ws mairon_ws"
         echo "dockrun noetic --ws neurondones_ws --share pcan"
@@ -132,6 +132,12 @@ function dockrun() {
         esac
     done
 
+    echo "${BLUE}Resource to share: ${resource_to_share}"
+    echo "Workspace: ${workspace}"
+    echo "Shell: ${docker_shell}"
+    echo "Container name: ${container_name}"
+    echo "Parse args: ${parse_args}${NC}"
+
     # Check if the image exist
     if [[ "$(docker images -q devenv:$container_name 2> /dev/null)" == "" ]]; then
         # build the image
@@ -156,11 +162,6 @@ function dockrun() {
         echo "${GREEN}Container ${container_name} not running. Launching...${NC}"
         # Launch container
         rocker_command="rocker --home --ssh --git --user --privileged --nvidia ${resource_to_share} ${parse_args} --x11 --network host --name ${container_name} devenv:${container_name} ${docker_shell}"
-        echo "${BLUE}Resource to share: ${resource_to_share}"
-        echo "Workspace: ${workspace}"
-        echo "Shell: ${docker_shell}"
-        echo "Container name: ${container_name}"
-        echo "Parse args: ${parse_args}${NC}"
         echo "${YELLOW}${rocker_command}${NC}"
         $(echo "$rocker_command")
     fi
