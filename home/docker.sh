@@ -1,5 +1,12 @@
+# Define color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
 # docker common commands
-export dockerfiles_DIR=~/srcs/development_environment/dockerfiles;
+export dockerfiles_path=~/srcs/development_environment/dockerfiles;
 
 alias dim="docker images"
 alias dpsa="docker ps -a"
@@ -21,103 +28,160 @@ fi
 # Build docker image
 # usage: dockbuild {noetic, melodic}
 function dockbuild(){
+    current_dir=$(pwd)
+
     if [ $# -lt 1 ]; then
-        echo "Usage: dockbuild <ROS_DISTRO> [build_args]"
+        echo "${BLUE}Usage: dockbuild <ROS_DISTRO> [build_args]"
         echo "ROS_DISTRO:"
         echo "      melodic, noetic, humble, etc."
         echo "build_args:"
-        echo "      EXT_SHELL - zsh (default) or bash"
+        echo "      EXT_SHELL - zsh (default) or bash${NC}"
         return 1
     fi
 
-	cd $dockerfiles_DIR;
+	cd $dockerfiles_path;
 
-    if [ $# -lt 2 ]; then
-        echo "Building ROS_DISTRO:"$1 "with SHELL_VERSION: zsh"
-        docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg EXT_SHELL="zsh" --build-arg SHELL="/usr/bin/zsh" -f devenv.Dockerfile .
-    else
-        if [ $2 = "bash" ]; then
-            echo "Building ROS_DISTRO:"$1 "with SHELL_VERSION:"$2
-            docker build -t devenv:$1 --build-arg ROS_DISTRO=$1 --build-arg EXT_SHELL="bash" --build-arg SHELL="/bin/bash" -f devenv.Dockerfile .
+    ros_distro=$1
+    shell=${ext}
+    shell_path="/usr/bin/zsh"
+
+    if [[ $# -gt 1 ]]; then
+        key=$2
+        shell=$3
+        if [[ $shell = "zsh" ]]; then
+            shell_path="/usr/bin/zsh"
+        elif [[ $shell = "bash" ]]; then
+            shell_path="/bin/bash"
         else
-            echo "SHELL_VERSION:"$2 "not supported"
+            echo "SHELL_VERSION: ${shell} not supported"
+            cd $current_dir
+            return 1
         fi
     fi
+
+    echo "${GREEN}Building ROS_DISTRO: ${ros_distro} with SHELL_VERSION: ${shell}${NC}"
+    docker build -t devenv:${ros_distro} --build-arg ROS_DISTRO=${ros_distro} --build-arg EXT_SHELL=${shell} --build-arg SHELL=${shell_path} -f devenv.Dockerfile .
+    cd $current_dir
 }
 
 # Run container with rocker
-# usage: rundock {noetic, melodic} [{remodel_ws, odin_ws}] [cmd]
-# ToDo Add extra parameters by arg
 # To share docker --volume /var/run/docker.sock:/var/run/docker.sock:ro
 # To share video (usb-cam) --volume /dev/video0:/dev/video0
 # To share pcan --volume /dev/pcanusb32:/dev/pcanusb32
+# To share dev folder --volume /dev:/dev
 function dockrun() {
+    current_dir=$(pwd)
+
     if [ $# -lt 1 ]; then
-        echo "Usage: dockrun <ROS_DISTRO> [posicional options]"
+        echo "${BLUE}Usage: dockrun <ROS_DISTRO> [options]"
         echo "ROS_DISTRO:"
         echo "      melodic, noetic, humble, etc."
         echo "Options:"
-        echo "      Passing 1 option   --> path_to_workspace. E.g., dockrun humble mairon_ws"
-        echo "      Passing 2 options  --> path_to_workspace + extra_config. E.g., dockrun humble mairon_ws video"
-        echo "          extra_config: pcan, video, pcan_video"
+        echo "      --ws: path to workspace. e.g. odin_ws"
+        echo "      --share: resource to share with the container. e.g. /dev/video0, /dev/pcanusb32, /dev"
+        echo "      --shell: shell to use in the container. By default zsh"
+        echo "      --parse: parse_args to use in the container. By default none"
         echo "Examples:"
-        echo "dockrun humble mairon_ws"
-        echo "dockrun noetic neurondones_ws pcan_video"
-        echo "dockrun melodic odinrobot_ws video"
+        echo "dockrun humble --ws mairon_ws"
+        echo "dockrun noetic --ws neurondones_ws --share pcan"
+        echo "dockrun melodic --ws odinrobot_ws --share video --shell bash${NC}"
         return 1
     fi
 
+    container_name="$1"
+    docker_shell=${ext}
+    workspace="${HOME}/ros/${container_name}"
+    resource_to_share=""
+    parse_args=""
+
+    while [[ $# -gt 1 ]]; do
+        key="$2"
+
+        case $key in
+            --ws)
+                workspace="${HOME}/ros/${container_name}/$3"
+                shift
+                shift
+                ;;
+            --shell)
+                docker_shell="$3"
+                shift
+                shift
+                ;;
+            --share)
+                resource=$3
+                if [[ $resource = "video" ]]; then
+                    resource_to_share="--volume /dev/video0:/dev/video0"
+                elif [[ $resource = "pcan" ]]; then
+                    resource_to_share="--volume /dev/pcanusb32:/dev/pcanusb32"
+                elif [[ $resource = "dev" ]]; then
+                    resource_to_share="--volume /dev:/dev"
+                fi
+                shift
+                shift
+                ;;
+            --parse)
+                parse_args="$3"
+                shift
+                shift
+                ;;
+            *)  # Unknown option
+                echo "Unknown option: $2"
+                return 1
+                ;;
+        esac
+    done
+
     # Check if the image exist
-    if [[ "$(docker images -q devenv:$1 2> /dev/null)" == "" ]]; then
+    if [[ "$(docker images -q devenv:$container_name 2> /dev/null)" == "" ]]; then
         # build the image
-        dockbuild $1
+        echo "${GREEN}Docker image for ${container_name} does not exist. Building...${NC}"
+        echo "${YELLOW}dockbuild ${container_name} ${docker_shell}${NC}"
+        if dockbuild ${container_name} ${docker_shell}; then
+            echo "${GREEN}Docker image for ${container_name} successfully built.${NC}"
+        else
+            echo "${RED}Docker image for ${container_name} failed to build.${NC}"
+            return 1
+        fi
     fi
+
+    cd $workspace
 
     # Check if the container exist
-    if [[ $(docker ps -aq -f name=$1) ]]; then
+    if [[ $(docker ps -aq -f name=$container_name) ]]; then
+        echo "Container ${container_name} already running. Attach console to container."
         # Attach to container
-        if [ $# -lt 2 ]; then
-            docker exec -it $1 bash -c "cd ~/ros/$1 && $ext"
-        else
-            docker exec -it $1 bash -c "cd ~/ros/$1/$2 && $ext"
-        fi
+        docker exec -it ${container_name} bash -c "cd ${workspace} && ${docker_shell}"
     else
+        echo "${GREEN}Container ${container_name} not running. Launching...${NC}"
         # Launch container
-        cd ~/ros/$1/$2;
-
-        if [ $# -lt 4 ]; then
-            rocker --home --ssh --git --user --privileged --nvidia --x11 --network host --name $1 devenv:$1
-        else
-            if [ $3 = "dev" ]; then
-                rocker --home --ssh --git --user --privileged --nvidia --x11 --volume /dev:/dev --network host --name $1 devenv:$1
-            else
-            fi
-            if [ $3 = "pcan" ]; then
-                rocker --home --ssh --git --user --privileged --nvidia --x11 --volume /dev/pcanusb32:/dev/pcanusb32 --network host --name $1 devenv:$1
-            else
-            fi
-            if [ $3 = "video" ]; then
-                rocker --home --ssh --git --user --privileged --nvidia --x11 --volume /dev/video0:/dev/video0 --network host --name $1 devenv:$1
-            else
-            fi
-        fi
+        rocker_command="rocker --home --ssh --git --user --privileged --nvidia ${resource_to_share} ${parse_args} --x11 --network host --name ${container_name} devenv:${container_name} ${docker_shell}"
+        echo "${BLUE}Resource to share: ${resource_to_share}"
+        echo "Workspace: ${workspace}"
+        echo "Shell: ${docker_shell}"
+        echo "Container name: ${container_name}"
+        echo "Parse args: ${parse_args}${NC}"
+        echo "${YELLOW}${rocker_command}${NC}"
+        $(echo "$rocker_command")
     fi
+
+    cd $current_dir
 }
 
 function dockexec() {
     if [ $# -lt 1 ]; then
-        echo "Usage: dockexec <ROS_DISTRO> [workspace] [command]"
+        echo "${BLUE}Usage: dockexec <ROS_DISTRO> [workspace] [command]"
         echo "ROS_DISTRO:"
         echo "      melodic, noetic, humble, etc."
         echo "Example:"
-        echo "dockexec noetic neurondones_ws roscore"
+        echo "dockexec noetic neurondones_ws roscore${NC}"
         return 1
     fi
 
     # Check if the image exist
     if [[ "$(docker images -q devenv:$1 2> /dev/null)" == "" ]]; then
         # build the image
-        echo "Docker image for ${1} does not exist"
+        echo "${RED}Docker image for ${1} does not exist${NC}"
         return 1
     fi
 
@@ -125,13 +189,14 @@ function dockexec() {
     if [[ $(docker ps -aq -f name=$1) ]]; then
         # Attach to container
         if [ $# -lt 2 ]; then
-            docker exec -it $1 bash -c "cd ~/ros/$1 && $ext"
+            docker exec -it $1 bash -c "cd ${HOME}/ros/$1 && $ext"
         else
-            docker exec -it $1 bash -c "cd ~/ros/$1/$2 && $ext"
+            docker exec -it $1 bash -c "cd ${HOME}/ros/$1/$2 && $ext"
         fi
     else
         # Launch container
-        echo "Container for ${1} does not exist"
+        echo "${RED}Container for ${1} does not exist${NC}"
+        return 1
     fi
 }
 
@@ -155,36 +220,3 @@ function dsr() {
 # function runpythonsyntax(){
 # 	rocker --home --name python_syntax tecnalia-docker-dev.artifact.tecnalia.com/docker:git
 # }
-
-# function runremodel() {
-# 	rocker --x11 --nvidia --privileged --network=host --name remodel_docker --oyr-run-arg " -v iiwa_state_recorder:/home/remodel/iiwa_state_recorder -v /home/andres/test/remodel_shared:/home/remodel/remodel_shared" -- remodel_app:melodic bash -c "'roslaunch remodel_app remodel_app.launch use_sim:=true docker:=true skill_manager:=true collision_detector:=true ui:=true cad:=true joystick:=false'"
-# }
-
-# function docrun() {
-# 	rocker --nvidia --pulse --x11 --volume /dev/video0:/dev/video0 --privileged --oyr-run-arg " -v odin_robot_volume:/root/" --name odin_robot --network host odin_robot:melodic $1
-# }
-
-# function runodin() {
-# 	rocker --nvidia --pulse --x11 --privileged --volume /dev/video0:/dev/video0 --name odin_melodic --network host devenv:melodic $1
-# }
-
-#DOCKER
-alias dexec='f(){ docker exec -w /root/ --detach-keys="ctrl-@" -e DISPLAY=$DISPLAY -it $1  /bin/bash -c "terminator --no-dbus";  unset -f f; }; f'
-alias dexec_nt='f(){ docker exec --detach-keys="ctrl-@" -e DISPLAY=$DISPLAY -it $1  /bin/bash ;  unset -f f; }; f'
-alias dstart='f(){ docker start $1; dexec $1;  unset -f f; }; f'
-# Run using same X and .ssh folder
-alias drun='f(){ docker run -it -e DISPLAY=$DISPLAY --detach-keys="ctrl-@" -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/.ssh:/root/.ssh:ro -v ~/docker_share/:/root/docker_share/ --net=host --name $2 $1; unset -f f; }; f'
-alias drun_nvidia='f(){ docker run -it --name $2 --privileged \
-    --net=host \
-    --env=NVIDIA_VISIBLE_DEVICES=all \
-    --env=NVIDIA_DRIVER_CAPABILITIES=all \
-    --env=DISPLAY \
-    --env=QT_X11_NO_MITSHM=1 \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    --gpus all \
-    --device /dev/snd \
-    -e NVIDIA_VISIBLE_DEVICES=0 \
-    --detach-keys="ctrl-@" \
-    -v ~/.ssh:/root/.ssh:ro \
-    -v ~/docker_share/:/root/docker_share/ \
-    $1 /bin/bash; unset -f f; }; f'
