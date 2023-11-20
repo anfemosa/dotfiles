@@ -64,7 +64,7 @@ function dockbuild(){
         fi
     fi
 
-    echo "${GREEN}Building ROS_DISTRO: ${ros_distro} with SHELL_VERSION: ${shell}${NC}"
+    echo "${GREEN}Building image for ${ros_distro} with ${shell} as shell${NC}"
     docker build -t devenv:${ros_distro} --build-arg ROS_DISTRO=${ros_distro} --build-arg EXT_SHELL=${shell} --build-arg SHELL=${shell_path} -f devenv.Dockerfile .
     cd $current_dir
 }
