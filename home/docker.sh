@@ -16,9 +16,9 @@ alias drmi="docker rmi"
 alias dsp="docker system prune --all"
 alias dimp="docker image prune"
 
-# Determine shell extension
+# Auto determine shell extension
 if [ -z $SHELL ]; then
-    echo "SHELL not set"
+    echo "${RED}SHELL not set${NC}"
     export SHELL=/usr/bin/zsh
     ext=$(basename ${SHELL});
 else
@@ -32,29 +32,34 @@ function dockbuild(){
 
     if [ $# -lt 1 ]; then
         echo "${BLUE}Usage: dockbuild <ROS_DISTRO> [build_args]"
-        echo "ROS_DISTRO:"
-        echo "      melodic, noetic, humble, etc."
+        echo "ROS_DISTRO: Ros distribution. e.g. melodic, noetic, humble, etc."
         echo "build_args:"
-        echo "      EXT_SHELL - zsh (default) or bash${NC}"
+        echo "      --shell: shell to use in the container. e.g. bash or zsh"
+        echo "Whiout build_args, default shell: ${ext}${NC}"
         return 1
     fi
-
-	cd $dockerfiles_path;
 
     ros_distro=$1
     shell=${ext}
     shell_path="/usr/bin/zsh"
 
+	cd $dockerfiles_path;
+
     if [[ $# -gt 1 ]]; then
         key=$2
-        shell=$3
-        if [[ $shell = "zsh" ]]; then
-            shell_path="/usr/bin/zsh"
-        elif [[ $shell = "bash" ]]; then
-            shell_path="/bin/bash"
+        if [[ $key = "--shell" ]]; then
+            shell=$3
+            if [[ $shell = "zsh" ]]; then
+                shell_path="/usr/bin/zsh"
+            elif [[ $shell = "bash" ]]; then
+                shell_path="/bin/bash"
+            else
+                echo "${RED}SHELL: ${shell} not supported${NC}"
+                cd $current_dir
+                return 1
+            fi
         else
-            echo "SHELL_VERSION: ${shell} not supported"
-            cd $current_dir
+            echo "${RED}build_args: ${key} not supported${NC}"
             return 1
         fi
     fi
@@ -132,10 +137,10 @@ function dockrun() {
         esac
     done
 
-    echo "${BLUE}Resource to share: ${resource_to_share}"
+    echo "${BLUE}Container name: ${container_name}"
     echo "Workspace: ${workspace}"
     echo "Shell: ${docker_shell}"
-    echo "Container name: ${container_name}"
+    echo "Resource to share: ${resource_to_share}"
     echo "Parse args: ${parse_args}${NC}"
 
     # Check if the image exist
@@ -143,7 +148,7 @@ function dockrun() {
         # build the image
         echo "${GREEN}Docker image for ${container_name} does not exist. Building...${NC}"
         echo "${YELLOW}dockbuild ${container_name} ${docker_shell}${NC}"
-        if dockbuild ${container_name} ${docker_shell}; then
+        if dockbuild ${container_name} --shell ${docker_shell}; then
             echo "${GREEN}Docker image for ${container_name} successfully built.${NC}"
         else
             echo "${RED}Docker image for ${container_name} failed to build.${NC}"
@@ -155,7 +160,7 @@ function dockrun() {
 
     # Check if the container exist
     if [[ $(docker ps -aq -f name=$container_name) ]]; then
-        echo "Container ${container_name} already running. Attach console to container."
+        echo "${YELLOW}Container ${container_name} already running. Attach console to container.${NC}"
         # Attach to container
         docker exec -it ${container_name} bash -c "cd ${workspace} && ${docker_shell}"
     else
@@ -170,35 +175,62 @@ function dockrun() {
 }
 
 function dockexec() {
+    current_dir=$(pwd)
+
     if [ $# -lt 1 ]; then
-        echo "${BLUE}Usage: dockexec <ROS_DISTRO> [workspace] [command]"
-        echo "ROS_DISTRO:"
-        echo "      melodic, noetic, humble, etc."
+        echo "${BLUE}Usage: dockexec <ROS_DISTRO> [options]"
+        echo "ROS_DISTRO: Ros distribution. e.g. melodic, noetic, humble, etc."
+        echo "options: "
+        echo "      --ws: path to workspace. e.g. odin_ws"
+        echo "      --shell: shell to use in the container. e.g. bash or zsh"
         echo "Example:"
-        echo "dockexec noetic neurondones_ws roscore${NC}"
+        echo "dockexec noetic --ws neurondones_ws --shell bash${NC}"
         return 1
     fi
 
-    # Check if the image exist
-    if [[ "$(docker images -q devenv:$1 2> /dev/null)" == "" ]]; then
-        # build the image
-        echo "${RED}Docker image for ${1} does not exist${NC}"
-        return 1
-    fi
+    container_name="$1"
+    workspace="${HOME}/ros/${container_name}"
+    docker_shell=${ext}
+
+    while [[ $# -gt 1 ]]; do
+        key="$2"
+
+        case $key in
+            --ws)
+                workspace="${HOME}/ros/${container_name}/$3"
+                shift
+                shift
+                ;;
+            --shell)
+                docker_shell="$3"
+                shift
+                shift
+                ;;
+            *)  # Unknown option
+                echo "Unknown option: $2"
+                return 1
+                ;;
+        esac
+    done
+
+    cd ${workspace}
 
     # Check if the container exist
-    if [[ $(docker ps -aq -f name=$1) ]]; then
+    if [[ $(docker ps -aq -f name=${container_name}) ]]; then
+        echo "${YELLOW}Container ${container_name} already running. Attach console to container.${NC}"
+        echo "${BLUE}workspace: ${workspace}"
+        echo "shell: ${docker_shell}${NC}"
         # Attach to container
-        if [ $# -lt 2 ]; then
-            docker exec -it $1 bash -c "cd ${HOME}/ros/$1 && $ext"
-        else
-            docker exec -it $1 bash -c "cd ${HOME}/ros/$1/$2 && $ext"
-        fi
+        echo "${GREEN}docker exec -it ${container_name} ${docker_shell}${NC}"
+        docker exec -it ${container_name} ${docker_shell}
     else
         # Launch container
-        echo "${RED}Container for ${1} does not exist${NC}"
+        echo "${RED}Container ${1} does not exist${NC}"
+        cd $current_dir
         return 1
     fi
+
+    cd $current_dir
 }
 
 # Remove all stoped containers
