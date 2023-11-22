@@ -9,7 +9,7 @@ else
 fi
 
 # Enable colcon tools
-if [[ "${ROS_VERSION}" = 2 ]]; then
+if [[ "${ROS_VERSION}" -eq 2 ]]; then
     # Quick directory change
     if [[ -f "/usr/share/colcon_cd/function/colcon_cd.sh" ]]; then
         source /usr/share/colcon_cd/function/colcon_cd.sh
@@ -21,8 +21,8 @@ if [[ "${ROS_VERSION}" = 2 ]]; then
 fi
 
 # Source rosmon
-function smon(){
-    if [[ ${ROS_VERSION} = 1 ]]; then
+function sourcerosmon(){
+    if [[ "${ROS_VERSION}" -eq 1 ]]; then
         if [[ -f "/opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}" ]]; then
             source /opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}
         else
@@ -33,23 +33,7 @@ function smon(){
 
 # cd to the root of the workspace
 function roshome(){
-    if [ "${ROS_VERSION}" = 1 ]
-    then
-        if command -v roscd &> /dev/null
-        then
-            roscd && cd ..
-            export ROS_HOME=$(pwd)
-        else
-            echo "command ** roscd ** not found"
-        fi
-    else
-        if command -v colcon_cd &> /dev/null
-        then
-            colcon_cd
-        else
-            echo "command ** colcon_cd ** not found"
-        fi
-    fi
+    cd ${ROS_HOME}
 }
 
 # Source the current workspace
@@ -59,7 +43,7 @@ function sourcews(){
     ws_name=${cropped%%/*}
     ws_path=${HOME}/ros/${ROS_DISTRO}/${ws_name}
 
-    if [ "${ROS_VERSION}" = 1 ]
+    if [[ "${ROS_VERSION}" -eq 1 ]]
     then
         FILE=${ws_path}/devel/setup.${ext}
     else
@@ -70,29 +54,29 @@ function sourcews(){
     if [[ -f $FILE ]]; then
         cd ${ws_path}
         echo "${GREEN}Sourcing workspace: ${FILE}${NC}"
-        source $FILE && smon
+        source $FILE && sourcerosmon
         cd ${current_dir}
         export ROS_HOME=${ws_path}
     else
         echo "${RED}Workspace not found: ${FILE}${NC}"
+        export ROS_HOME=/opt/ros/${ROS_DISTRO}
     fi
 }
 
 # Source the current workspace
 function sourceros(){
     source /opt/ros/${ROS_DISTRO}/setup.${ext}
-    export ROS_HOME="/opt/ros/${ROS_DISTRO}/"
     # In ROS 1 source rosmon
-    if [ "${ROS_VERSION}" = 1 ]
+    if [[ "${ROS_VERSION}" -eq 1 ]]
     then
-        smon
+        sourcerosmon
     fi
 }
 
 # Automatic catkin build
 function cb() {
     pwd_cb=$(pwd)
-    if [ "${ROS_VERSION}" = 1 ]
+    if [[ "${ROS_VERSION}" -eq 1 ]]
     then
         roshome
         catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release -- "$@"
@@ -106,7 +90,7 @@ function cb() {
 
 # Clean workspace (delete the generated folders, then catkin build)
 function cbclean(){
-    if [ "${ROS_VERSION}" = 1 ]
+    if [[ "${ROS_VERSION}" -eq 1 ]]
     then
         roshome && rm -rf build devel install && catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release
     else
@@ -136,7 +120,7 @@ alias sc=sourcews
 # Check if ROS_DISTRO is set.
 if [[ -z "${ROS_DISTRO}" ]]; then
     ROS_DIR=/opt/ros
-    if [ -d "$ROS_DIR" ];
+    if [ -d "${ROS_DIR}" ];
     then
         export ROS_DISTRO=$(basename $(find /opt/ros/* -maxdepth 0 -type d | head -1))
         #echo "ROS_DISTRO set to ${ROS_DISTRO}"

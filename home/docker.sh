@@ -41,9 +41,9 @@ function dockbuild(){
         key=$2
         if [[ $key = "--shell" ]]; then
             shell=$3
-            if [[ $shell = "zsh" ]]; then
+            if [[ "${shell}" == "zsh" ]]; then
                 shell_path="/usr/bin/zsh"
-            elif [[ $shell = "bash" ]]; then
+            elif [[ "${shell}" == "bash" ]]; then
                 shell_path="/bin/bash"
             else
                 echo "${RED}SHELL: ${shell} not supported${NC}"
@@ -97,7 +97,6 @@ function dockrun() {
         case $key in
             --ws)
                 workspace="${HOME}/ros/${container_name}/$3"
-                export ROS_WORKSPACE=$workspace
                 shift
                 shift
                 ;;
@@ -108,11 +107,11 @@ function dockrun() {
                 ;;
             --share)
                 resource=$3
-                if [[ $resource = "video" ]]; then
+                if [[ "${resource}" == "video" ]]; then
                     resource_to_share="--volume /dev/video0:/dev/video0"
-                elif [[ $resource = "pcan" ]]; then
+                elif [[ "${resource}" == "pcan" ]]; then
                     resource_to_share="--volume /dev/pcanusb32:/dev/pcanusb32"
-                elif [[ $resource = "dev" ]]; then
+                elif [[ "${resource}" == "dev" ]]; then
                     resource_to_share="--volume /dev:/dev"
                 fi
                 shift
@@ -129,6 +128,8 @@ function dockrun() {
                 ;;
         esac
     done
+
+    export ROS_WORKSPACE=${workspace}
 
     echo "${BLUE}Container name: ${container_name}"
     echo "Workspace: ${workspace}"
