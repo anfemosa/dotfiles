@@ -1,10 +1,3 @@
-# Define color codes
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
 # docker common commands
 export dockerfiles_path=~/srcs/development_environment/dockerfiles;
 
@@ -25,8 +18,7 @@ else
     ext=$(basename ${SHELL});
 fi
 
-# Build docker image
-# usage: dockbuild {noetic, melodic}
+# Build a docker image
 function dockbuild(){
     current_dir=$(pwd)
 
@@ -105,6 +97,7 @@ function dockrun() {
         case $key in
             --ws)
                 workspace="${HOME}/ros/${container_name}/$3"
+                export ROS_WORKSPACE=$workspace
                 shift
                 shift
                 ;;
@@ -222,7 +215,7 @@ function dockexec() {
         echo "shell: ${docker_shell}${NC}"
         # Attach to container
         echo "${GREEN}docker exec -it ${container_name} ${docker_shell}${NC}"
-        docker exec -it ${container_name} ${docker_shell}
+        docker exec -it ${container_name} ${docker_shell} -c "sc"
     else
         # Launch container
         echo "${RED}Container ${1} does not exist${NC}"

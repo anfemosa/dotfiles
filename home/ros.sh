@@ -2,84 +2,106 @@
 # ROS aliases and functions
 ###################################################################
 
-# Define ROS_DISTRO before source ROS on native OS
-# if [ -z $ROS_DISTRO ]; then export ROS_DISTRO=noetic; fi
-if [[ -z "${ROS_DISTRO}" ]]; then
-    ROS_DIR=/opt/ros
-    if [ -d "$ROS_DIR" ];
-    then
-        export ROS_DISTRO=$(basename $(find /opt/ros/* -maxdepth 0 -type d | head -1))
-    else
-        unset ROS_DISTRO
-    fi
+if [[ "${ROS_DISTRO}" == "noetic" || "${ROS_DISTRO}" == "melodic" ]]; then
+    export ROS_VERSION=1
+else
+    export ROS_VERSION=2
 fi
 
-# Determine shell extension
-if [ ! -z $EXT_SHELL ]; then
-    if [ -z $SHELL ]; then
-        echo "SHELL not set"
-        export SHELL=/usr/bin/zsh
-        ext=$(basename ${SHELL});
-    else
-        ext=$(basename ${SHELL});
+# Enable colcon tools
+if [[ "${ROS_VERSION}" = 2 ]]; then
+    # Quick directory change
+    if [[ -f "/usr/share/colcon_cd/function/colcon_cd.sh" ]]; then
+        source /usr/share/colcon_cd/function/colcon_cd.sh
+    fi
+    # Completion
+    if [[ -f "/usr/share/colcon_argcomplete/hook/colcon-argcomplete.${ext}" ]]; then
+        source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.${ext}
     fi
 fi
 
 # Source rosmon
 function smon(){
-    if [[ -f "/opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}" ]]; then
-        source /opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}
+    if [[ ${ROS_VERSION} = 1 ]]; then
+        if [[ -f "/opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}" ]]; then
+            source /opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}
+        else
+            echo "rosmon not found."
+        fi
     fi
 }
 
 # cd to the root of the workspace
 function roshome(){
-    if command -v roscd &> /dev/null
+    if [ "${ROS_VERSION}" = 1 ]
     then
-        roscd && cd ..
-        ROS_HOME=${PWD}
+        if command -v roscd &> /dev/null
+        then
+            roscd && cd ..
+            export ROS_HOME=$(pwd)
+        else
+            echo "command ** roscd ** not found"
+        fi
     else
-        echo "command ** roscd ** not found"
+        if command -v colcon_cd &> /dev/null
+        then
+            colcon_cd
+        else
+            echo "command ** colcon_cd ** not found"
+        fi
     fi
 }
 
 # Source the current workspace
 function sourcews(){
+    current_dir=$(pwd)
+    cropped=${PWD#${HOME}/ros/${ROS_DISTRO}/}
+    ws_name=${cropped%%/*}
+    ws_path=${HOME}/ros/${ROS_DISTRO}/${ws_name}
+
     if [ "${ROS_VERSION}" = 1 ]
     then
-        source ./devel/setup.${ext} && smon
+        FILE=${ws_path}/devel/setup.${ext}
     else
-        source ./install/setup.${ext}
+        FILE=${ws_path}/install/setup.${ext}
+    fi
+
+    # if PWD belongs to ROS workspace then source it
+    if [[ -f $FILE ]]; then
+        cd ${ws_path}
+        echo "${GREEN}Sourcing workspace: ${FILE}${NC}"
+        source $FILE && smon
+        cd ${current_dir}
+        export ROS_HOME=${ws_path}
+    else
+        echo "${RED}Workspace not found: ${FILE}${NC}"
     fi
 }
 
 # Source the current workspace
 function sourceros(){
-    source /opt/ros/${ROS_DISTRO}/setup.${ext} && smon
-    ROS_HOME="/opt/ros/${ROS_DISTRO}/"
-}
-
-# Source the current workspace
-function sourcethis(){
-    pwd_st=${PWD}
-    roshome && sourcews
-    echo "Sourcing: ${ROS_HOME}"
-    cd ${pwd_st}
+    source /opt/ros/${ROS_DISTRO}/setup.${ext}
+    export ROS_HOME="/opt/ros/${ROS_DISTRO}/"
+    # In ROS 1 source rosmon
+    if [ "${ROS_VERSION}" = 1 ]
+    then
+        smon
+    fi
 }
 
 # Automatic catkin build
 function cb() {
+    pwd_cb=$(pwd)
     if [ "${ROS_VERSION}" = 1 ]
     then
-        pwd_cb=${PWD}
         roshome
         catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release -- "$@"
-        sourcethis
-        cd ${pwd_cb}
     else
         colcon build --parallel-workers 6 "$@"
-        source ./install/setup.zsh
     fi
+
+    sourcews
+    cd ${pwd_cb}
 }
 
 # Clean workspace (delete the generated folders, then catkin build)
@@ -109,23 +131,19 @@ function runci(){
     fi
 }
 
-# if a new terminal starts in a ws, auto source it (useful for vscode)
-if [ -z ${ROS_DISTRO+x} ]; then ;
-else
-    pwd_init=${PWD}
-    cropped=${PWD#${HOME}/ros/${ROS_DISTRO}/}
-    WS_name=${cropped%%/*}
-    WS_path=${HOME}/ros/${ROS_DISTRO}/${WS_name}
-    FILE=${WS_path}/devel/setup.${ext}
-    # if PWD belongs to ROS ws then source it
-    if [[ -f $FILE ]]; then
-        cd ${WS_path}
-        source $FILE
-        cd ${pwd_init}
-        ROS_HOME=${WS_path}
-    else
-        sourceros
-    fi
-fi
+alias sc=sourcews
 
-#alias sc=sourcethis
+# Check if ROS_DISTRO is set.
+if [[ -z "${ROS_DISTRO}" ]]; then
+    ROS_DIR=/opt/ros
+    if [ -d "$ROS_DIR" ];
+    then
+        export ROS_DISTRO=$(basename $(find /opt/ros/* -maxdepth 0 -type d | head -1))
+        #echo "ROS_DISTRO set to ${ROS_DISTRO}"
+    else
+        unset ROS_DISTRO
+        #echo "${YELLOW}ROS is not installed.${NC}"
+    fi
+else
+    sourcews
+fi
