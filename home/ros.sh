@@ -58,7 +58,7 @@ function sourcews(){
         cd ${current_dir}
         export ROS_HOME=${ws_path}
     else
-        echo "${RED}Workspace not found: ${FILE}${NC}"
+        # echo "${RED}Workspace not found: ${FILE}${NC}"
         export ROS_HOME=/opt/ros/${ROS_DISTRO}
     fi
 }
