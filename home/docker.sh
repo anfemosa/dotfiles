@@ -108,17 +108,17 @@ function dockrun() {
             --share)
                 resource=$3
                 if [[ "${resource}" == "video" ]]; then
-                    resource_to_share="--volume /dev/video0:/dev/video0"
+                    resource_to_share=" --volume /dev/video0:/dev/video0"
                 elif [[ "${resource}" == "pcan" ]]; then
-                    resource_to_share="--volume /dev/pcanusb32:/dev/pcanusb32"
+                    resource_to_share=" --volume /dev/pcanusb32:/dev/pcanusb32"
                 elif [[ "${resource}" == "dev" ]]; then
-                    resource_to_share="--volume /dev:/dev"
+                    resource_to_share=" --volume /dev:/dev"
                 fi
                 shift
                 shift
                 ;;
             --parse)
-                parse_args="$3"
+                parse_args=" $3"
                 shift
                 shift
                 ;;

@@ -1,8 +1,11 @@
+<<<<<<< HEAD
 # Include dotfiles
 source "$HOME/.homesick/repos/dotfiles/home/system.sh"
 source "$HOME/.homesick/repos/dotfiles/home/git.sh"
 source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
 source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
+=======
+>>>>>>> 97bf886ad77da2ceb8d2bc21b8c24ba921563405
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -15,7 +18,6 @@ fi
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/apps:$PATH
-
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
@@ -70,12 +72,20 @@ export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 # *********************
 # User configuration
 # *********************
+source $HOME/.init_shell
+
+<<<<<<< HEAD
+=======
+# Include dotfiles
+source "$HOME/.homesick/repos/dotfiles/home/system.sh"
+source "$HOME/.homesick/repos/dotfiles/home/git.sh"
+source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
+source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
 
 # Use code as default editor
 export EDITOR="code -r"
 
-source $HOME/.init_shell
-
+>>>>>>> 97bf886ad77da2ceb8d2bc21b8c24ba921563405
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi

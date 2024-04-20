@@ -1,5 +1,4 @@
-#!/usr/bin/zsh
-
+#!/usr/bin/env bash
 # Eternal bash history.
 # ---------------------
 # Undocumented feature which sets the size to "unlimited".

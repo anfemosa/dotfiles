@@ -57,4 +57,10 @@ then
 fi
 
 # Tecnalia T
-alias mountT='sudo mount -t cifs //tri.lan/tri /mnt/T --verbose -o username=110343,password=Iris\#1983,workgroup=TRI.LAN'
+alias mountT='sudo mount -t cifs //tri.lan/tri /mnt/T --verbose -o vers=3.0,username=110343,password=Bageera\#1983,workgroup=TRI.LAN'
+
+# Remove all stoped containers
+function pagegui() {
+	project_name="$1"
+    python3 ~/apps/page/page.py $project_name
+}
