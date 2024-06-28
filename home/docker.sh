@@ -26,7 +26,7 @@ function dockbuild(){
         echo "ROS_DISTRO: Ros distribution. e.g. melodic, noetic, humble, etc."
         echo "build_args:"
         echo "      --shell: shell to use in the container. e.g. bash or zsh"
-        echo "      --install_rust to instal RUST in the container."
+        echo "      --force: force rebuild the image"
         echo "Whiout build_args, default shell: ${ext}${NC}"
         return 1
     fi
@@ -36,6 +36,8 @@ function dockbuild(){
     shell_path="/bin/${ext}"
 
 	cd $dockerfiles_path;
+
+    build_options="--build-arg ROS_DISTRO=${ros_distro}"
 
     while [[ $# -gt 1 ]]; do
         key="$2"
@@ -51,7 +53,13 @@ function dockbuild(){
                     cd $current_dir
                     return 1
                 fi
+                build_options="${build_options} --build-arg EXT_SHELL=${shell} --build-arg SHELL=${shell_path}"
                 shift
+                shift
+                ;;
+            --force)
+                echo "${YELLOW}Force rebuild the image${NC}"
+                build_options="${build_options} --no-cache"
                 shift
                 ;;
             *)
@@ -60,7 +68,7 @@ function dockbuild(){
                 ;;
         esac
     done
-    build_command="docker build -t devenv:${ros_distro} --build-arg ROS_DISTRO=${ros_distro} --build-arg EXT_SHELL=${shell} --build-arg SHELL=${shell_path} -f devenv.Dockerfile ."
+    build_command="docker build -t devenv:${ros_distro} ${build_options} -f devenv.Dockerfile ."
     echo "${YELLOW}${build_command}${NC}"
     $(echo "$build_command")
     cd $current_dir
