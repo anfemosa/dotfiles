@@ -1,6 +1,4 @@
 # docker common commands
-export dockerfiles_path=~/srcs/development_environment/dockerfiles;
-
 alias dim="docker images"
 alias dpsa="docker ps -a"
 alias dps="docker ps"
@@ -23,41 +21,48 @@ function dockbuild(){
     current_dir=$(pwd)
 
     if [ $# -lt 1 ]; then
-        echo "${BLUE}Usage: dockbuild <ROS_DISTRO> [build_args]"
+        echo "${BLUE} dockbuild: Build a docker image for ROS"
+        echo "Usage: dockbuild <ROS_DISTRO> [build_args]"
         echo "ROS_DISTRO: Ros distribution. e.g. melodic, noetic, humble, etc."
         echo "build_args:"
         echo "      --shell: shell to use in the container. e.g. bash or zsh"
+        echo "      --install_rust to instal RUST in the container."
         echo "Whiout build_args, default shell: ${ext}${NC}"
         return 1
     fi
 
     ros_distro=$1
     shell=${ext}
-    shell_path="/usr/bin/zsh"
+    shell_path="/bin/${ext}"
 
 	cd $dockerfiles_path;
 
-    if [[ $# -gt 1 ]]; then
-        key=$2
-        if [[ $key = "--shell" ]]; then
-            shell=$3
-            if [[ "${shell}" == "zsh" ]]; then
-                shell_path="/usr/bin/zsh"
-            elif [[ "${shell}" == "bash" ]]; then
-                shell_path="/bin/bash"
-            else
-                echo "${RED}SHELL: ${shell} not supported${NC}"
-                cd $current_dir
+    while [[ $# -gt 1 ]]; do
+        key="$2"
+        case $key in
+            --shell)
+                shell="$3"
+                if [[ "${shell}" == "zsh" ]]; then
+                    shell_path="/usr/bin/zsh"
+                elif [[ "${shell}" == "bash" ]]; then
+                    shell_path="/bin/bash"
+                else
+                    echo "${RED}SHELL: ${shell} not supported${NC}"
+                    cd $current_dir
+                    return 1
+                fi
+                shift
+                shift
+                ;;
+            *)
+                echo "${RED}build_args: ${key} not supported${NC}"
                 return 1
-            fi
-        else
-            echo "${RED}build_args: ${key} not supported${NC}"
-            return 1
-        fi
-    fi
-
-    echo "${GREEN}Building image for ${ros_distro} with ${shell} as shell${NC}"
-    docker build -t devenv:${ros_distro} --build-arg ROS_DISTRO=${ros_distro} --build-arg EXT_SHELL=${shell} --build-arg SHELL=${shell_path} -f devenv.Dockerfile .
+                ;;
+        esac
+    done
+    build_command="docker build -t devenv:${ros_distro} --build-arg ROS_DISTRO=${ros_distro} --build-arg EXT_SHELL=${shell} --build-arg SHELL=${shell_path} -f devenv.Dockerfile ."
+    echo "${YELLOW}${build_command}${NC}"
+    $(echo "$build_command")
     cd $current_dir
 }
 
@@ -70,7 +75,8 @@ function dockrun() {
     current_dir=$(pwd)
 
     if [ $# -lt 1 ]; then
-        echo "${BLUE}Usage: dockrun <ROS_DISTRO> [options]"
+        echo "${BLUE} dockrun: Run a docker image for ROS"
+        echo "Usage: dockrun <ROS_DISTRO> [options]"
         echo "ROS_DISTRO:"
         echo "      melodic, noetic, humble, etc."
         echo "Options:"
@@ -160,7 +166,7 @@ function dockrun() {
     else
         echo "${GREEN}Container ${container_name} not running. Launching...${NC}"
         # Launch container
-        rocker_command="rocker --home --ssh --git --user --privileged --nvidia ${resource_to_share} ${parse_args} --x11 --network host --name ${container_name} devenv:${container_name} ${docker_shell}"
+        rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia ${resource_to_share} ${parse_args} --x11 --network host --name ${container_name} devenv:${container_name} ${docker_shell}"
         echo "${YELLOW}${rocker_command}${NC}"
         $(echo "$rocker_command")
     fi
@@ -172,7 +178,8 @@ function dockexec() {
     current_dir=$(pwd)
 
     if [ $# -lt 1 ]; then
-        echo "${BLUE}Usage: dockexec <ROS_DISTRO> [options]"
+        echo "${BLUE} dockexec: attach to a docker container for ROS"
+        echo "Usage: dockexec <ROS_DISTRO> [options]"
         echo "ROS_DISTRO: Ros distribution. e.g. melodic, noetic, humble, etc."
         echo "options: "
         echo "      --ws: path to workspace. e.g. odin_ws"

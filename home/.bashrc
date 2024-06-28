@@ -114,3 +114,4 @@ if ! shopt -oq posix; then
 fi
 
 source $HOME/apps/scripts/init.sh
+. "$HOME/.cargo/env"

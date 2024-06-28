@@ -65,6 +65,8 @@ export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 # *********************
 source $HOME/.init_shell
 
+export dockerfiles_path=~/srcs/development_environment/dockerfiles;
+
 # Include dotfiles
 source "$HOME/.homesick/repos/dotfiles/home/system.sh"
 source "$HOME/.homesick/repos/dotfiles/home/git.sh"
