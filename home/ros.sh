@@ -76,9 +76,9 @@ function sourceros(){
 # Automatic catkin build
 function cb() {
     pwd_cb=$(pwd)
+    roshome
     if [[ "${ROS_VERSION}" -eq 1 ]]
     then
-        roshome
         catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release -- "$@"
     else
         colcon build --parallel-workers 6 "$@"

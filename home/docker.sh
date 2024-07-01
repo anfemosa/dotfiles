@@ -10,7 +10,7 @@ alias dimp="docker image prune"
 # Auto determine shell extension
 if [ -z $SHELL ]; then
     echo "${RED}SHELL not set${NC}"
-    export SHELL=/usr/bin/zsh
+    export SHELL=/bin/zsh
     ext=$(basename ${SHELL});
 else
     ext=$(basename ${SHELL});
@@ -44,15 +44,15 @@ function dockbuild(){
         case $key in
             --shell)
                 shell="$3"
-                if [[ "${shell}" == "zsh" ]]; then
-                    shell_path="/usr/bin/zsh"
-                elif [[ "${shell}" == "bash" ]]; then
-                    shell_path="/bin/bash"
-                else
-                    echo "${RED}SHELL: ${shell} not supported${NC}"
-                    cd $current_dir
-                    return 1
-                fi
+                case $shell in
+                    bash|zsh)
+                        ;;
+                    *)
+                        echo "${RED}SHELL: ${shell} not supported${NC}"
+                        cd $current_dir
+                        return 1
+                    ;;
+                esac
                 build_options="${build_options} --build-arg EXT_SHELL=${shell} --build-arg SHELL=${shell_path}"
                 shift
                 shift
@@ -86,7 +86,7 @@ function dockrun() {
         echo "${BLUE} dockrun: Run a docker image for ROS"
         echo "Usage: dockrun <ROS_DISTRO> [options]"
         echo "ROS_DISTRO:"
-        echo "      melodic, noetic, humble, etc."
+        echo "      melodic, noetic, humble, jazzy,etc."
         echo "Options:"
         echo "      --ws: path to workspace. e.g. odin_ws"
         echo "      --share: resource to share with the container, e.g. video, pcan or dev"
@@ -104,6 +104,8 @@ function dockrun() {
     workspace="${HOME}/ros/${container_name}"
     resource_to_share=""
     parse_args=""
+    run_options=""
+    run_message="Container name: ${container_name}"
 
     while [[ $# -gt 1 ]]; do
         key="$2"
@@ -111,28 +113,42 @@ function dockrun() {
         case $key in
             --ws)
                 workspace="${HOME}/ros/${container_name}/$3"
+                run_message="${run_message}\nWorkspace: ${workspace}"
                 shift
                 shift
                 ;;
             --shell)
                 docker_shell="$3"
+                run_message="${run_message}\nShell: ${docker_shell}"
                 shift
                 shift
                 ;;
             --share)
                 resource=$3
-                if [[ "${resource}" == "video" ]]; then
-                    resource_to_share=" --volume /dev/video0:/dev/video0"
-                elif [[ "${resource}" == "pcan" ]]; then
-                    resource_to_share=" --volume /dev/pcanusb32:/dev/pcanusb32"
-                elif [[ "${resource}" == "dev" ]]; then
-                    resource_to_share=" --volume /dev:/dev"
-                fi
+                case $resource in
+                    video)
+                        resource_to_share="${resource_to_share} --volume /dev/video0:/dev/video0"
+                        ;;
+                    pcan)
+                        resource_to_share="${resource_to_share} --volume /dev/pcanusb32:/dev/pcanusb32"
+                        ;;
+                    dev)
+                        resource_to_share=" --volume /dev:/dev"
+                        ;;
+                    *)
+                        echo "Resource not supported: ${resource}"
+                        return 1
+                        ;;
+                esac
+                run_message="${run_message}\nResource to share: ${resource_to_share}"
+                run_options="${run_options} ${resource_to_share}"
                 shift
                 shift
                 ;;
             --parse)
                 parse_args=" $3"
+                run_message="${run_message}\nParse args: ${parse_args}"
+                run_options="${run_options} ${parse_args}"
                 shift
                 shift
                 ;;
@@ -145,11 +161,7 @@ function dockrun() {
 
     export ROS_WORKSPACE=${workspace}
 
-    echo "${BLUE}Container name: ${container_name}"
-    echo "Workspace: ${workspace}"
-    echo "Shell: ${docker_shell}"
-    echo "Resource to share: ${resource_to_share}"
-    echo "Parse args: ${parse_args}${NC}"
+    echo "${BLUE}${run_message}${NC}"
 
     # Check if the image exist
     if [[ "$(docker images -q devenv:$container_name 2> /dev/null)" == "" ]]; then
@@ -174,7 +186,7 @@ function dockrun() {
     else
         echo "${GREEN}Container ${container_name} not running. Launching...${NC}"
         # Launch container
-        rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia ${resource_to_share} ${parse_args} --x11 --network host --name ${container_name} devenv:${container_name} ${docker_shell}"
+        rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --x11 --network host ${run_options} --name ${container_name} devenv:${container_name} ${docker_shell}"
         echo "${YELLOW}${rocker_command}${NC}"
         $(echo "$rocker_command")
     fi
