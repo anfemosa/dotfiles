@@ -57,6 +57,12 @@ function dockbuild(){
                 shift
                 shift
                 ;;
+            --ws_packages)
+                ws_packages="${3}"
+                build_options="${build_options} --build-arg PACKAGES=${ws_packages}"
+                shift
+                shift
+                ;;
             --force)
                 echo "${YELLOW}Force rebuild the image${NC}"
                 build_options="${build_options} --no-cache"
