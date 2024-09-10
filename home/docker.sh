@@ -98,6 +98,7 @@ function dockrun() {
         echo "      --share: resource to share with the container, e.g. video, pcan or dev"
         echo "      --shell: shell to use in the container. By default zsh"
         echo "      --parse: parse_args to use in the container, e.g. --oyr-spacenav. By default none"
+        echo "      --image: use an specific image. By default uses the ROS base image"
         echo "Examples:"
         echo "dockrun humble --ws mairon_ws"
         echo "dockrun noetic --ws neurondones_ws --share pcan"
@@ -106,6 +107,7 @@ function dockrun() {
     fi
 
     container_name="$1"
+    image="devenv:$1"
     docker_shell=${ext}
     workspace="${HOME}/ros/${container_name}"
     resource_to_share=""
@@ -117,6 +119,12 @@ function dockrun() {
         key="$2"
 
         case $key in
+            --image)
+                image="$3:${container_name}"
+                run_message="${run_message}\nImage: ${image}"
+                shift
+                shift
+                ;;
             --ws)
                 workspace="${HOME}/ros/${container_name}/$3"
                 run_message="${run_message}\nWorkspace: ${workspace}"
