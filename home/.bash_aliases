@@ -7,7 +7,7 @@ alias f-update="flatpak update"
 
 alias apti="sudo apt install"
 alias aptu="sudo apt update"
-alias aptg="sudo apt upgrade"
+alias aptg="sudo apt upgrade -y"
 alias aptl="apt list --upgradable"
 alias aptr="sudo apt remove --purge"
 alias apts="apt-cache search"
