@@ -77,6 +77,7 @@ function sourceros(){
 function cb() {
     pwd_cb=$(pwd)
     roshome
+    
     if [[ "${ROS_VERSION}" -eq 1 ]]
     then
         catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release -- "$@"
