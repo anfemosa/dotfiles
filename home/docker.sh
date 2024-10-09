@@ -178,7 +178,7 @@ function dockrun() {
     echo "${BLUE}${run_message}${NC}"
 
     # Check if the image exist
-    if [[ "$(docker images -q devenv:$container_name 2> /dev/null)" == "" ]]; then
+    if [[ "$(docker images -q $image 2> /dev/null)" == "" ]]; then
         # build the image
         echo "${GREEN}Docker image for ${container_name} does not exist. Building...${NC}"
         echo "${YELLOW}dockbuild ${container_name} ${docker_shell}${NC}"
