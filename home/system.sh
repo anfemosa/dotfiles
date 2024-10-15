@@ -59,6 +59,10 @@ fi
 # Tecnalia T
 alias mountT='sudo mount -t cifs //tri.lan/tri /mnt/T --verbose -o vers=3.0,username=110343,password=Bageera\#1983,workgroup=TRI.LAN'
 
+# Dotfiles
+alias dot='homeshick cd dotfiles && code . && cd -'
+alias dev='cd ${HOME}/srcs/development_environment && code . && cd -'
+
 # Remove all stoped containers
 function pagegui() {
 	project_name="$1"
