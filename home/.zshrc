@@ -21,6 +21,8 @@ antigen use oh-my-zsh
 
 antigen theme romkatv/powerlevel10k
 
+antigen bundle direnv
+antigen bundle command-not-found
 antigen bundle docker
 antigen bundle git
 antigen bundle globalias
