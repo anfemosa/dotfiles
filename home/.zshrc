@@ -73,7 +73,8 @@ export dockerfiles_path=~/srcs/development_environment/dockerfiles;
 source "$HOME/.homesick/repos/dotfiles/home/system.sh"
 source "$HOME/.homesick/repos/dotfiles/home/git.sh"
 source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
-source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
+[ $RUNNING_IN_DOCKER ] && source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
+
 
 # Use code as default editor
 export EDITOR="code -r"
