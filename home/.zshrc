@@ -65,27 +65,22 @@ export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 # *********************
 # User configuration
 # *********************
-source $HOME/.init_shell
 
+# Path for Docker files
 export dockerfiles_path=~/srcs/development_environment/dockerfiles;
+# Use code as default editor
+export EDITOR="code -r"
 
 # Include dotfiles
+[ -f ~/.init_shell ] && . ~/.init_shell
+
 source "$HOME/.homesick/repos/dotfiles/home/system.sh"
 source "$HOME/.homesick/repos/dotfiles/home/git.sh"
 source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
 [ $RUNNING_IN_DOCKER ] && source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
 
-
-# Use code as default editor
-export EDITOR="code -r"
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-if [ -f $HOME/.cargo/env ]; then
-    . "$HOME/.cargo/env"
-fi
+[ -f ~/.bash_aliases ] && . ~/.bash_aliases
+[ -f ~/.cargo/env ] && . ~/.cargo/env
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
