@@ -7,15 +7,27 @@ A backup of my dot and config files using [homeshick](https://github.com/andsens
 ## Bootstrap a machine
 
 ``` bash
+# install homeshick
 git clone https://github.com/andsens/homeshick.git $HOME/.homesick/repos/homeshick
+
+# clone the dotfiles
 $HOME/.homesick/repos/homeshick/bin/homeshick clone anfemosa/dotfiles
+
+# reproduce the tracked links
+$HOME/.homesick/repos/homeshick/bin/homeshick link dotfiles
 ```
 
 ## Usage
 
+**Add files for tracking**
 ``` bash
+# load homeshick --> add this to .bashrc/.zshrc to auto load the application
 source ~/.homesick/repos/homeshick/homeshick.sh
+
+# track .bashrc in dotfiles
 homeshick track dotfiles .bashrc
+
+# commit and push
 homeshick cd dotfiles
 git commit -m "Added .bashrc file"
 git push origin master
