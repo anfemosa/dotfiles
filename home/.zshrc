@@ -66,8 +66,6 @@ export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 # User configuration
 # *********************
 
-# Path for Docker files
-export dockerfiles_path=~/srcs/development_environment/dockerfiles;
 # Use code as default editor
 export EDITOR="code -r"
 
