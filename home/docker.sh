@@ -29,7 +29,7 @@ function dockbuild(){
         echo "ROS_DISTRO: Ros distribution. e.g. melodic, noetic, humble, etc."
         echo "build_args:"
         echo "      --shell: shell to use in the container. e.g. bash or zsh"
-        echo "      --ws: file name with packages to install in the workspace. e.g. neurondones_humble.txt"
+        echo "      --ws: name of the workspace to install packages. e.g. neurondones"
         echo "      --force: force rebuild the image"
         echo "Whiout build_args, default shell: ${ext}${NC}"
         return 1
@@ -62,7 +62,7 @@ function dockbuild(){
                 shift
                 ;;
             --ws)
-                ws_packages="${3}"
+                ws_packages="${3}_${ros_distro}.txt"
                 build_options="${build_options} --build-arg PACKAGES=${ws_packages}"
                 shift
                 shift
