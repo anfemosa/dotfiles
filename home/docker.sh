@@ -1,5 +1,5 @@
 # Path for Docker files
-export dockerfiles_path=~/srcs/development_environment/dockerfiles;
+export dockerfiles_path=~/devenv/dockerfiles;
 
 # docker common commands
 alias dim="docker images"
