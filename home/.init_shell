@@ -2,13 +2,21 @@
 # ---------------------
 # Undocumented feature which sets the size to "unlimited".
 # http://stackoverflow.com/questions/9457233/unlimited-bash-history
-export HISTFILESIZE=1000000
-export HISTSIZE=1000000
 
+export HISTSIZE=1000000
+export HISTFILESIZE=1000000
 export HISTFILE=~/.bash_eternal_history
+
+# history options
+setopt hist_ignore_all_dups
 
 export PROMPT_COMMAND='LAST_COMMAND_EXIT=$? && history -a && test 127 -eq $LAST_COMMAND_EXIT && head -n -2 $HISTFILE >${HISTFILE}_temp && mv ${HISTFILE}_temp $HISTFILE'
 
 [ -f /usr/share/vcstool-completion/vcs.zsh ] &&  source /usr/share/vcstool-completion/vcs.zsh
+
+source "$HOME/.homesick/repos/dotfiles/home/system.sh"
+source "$HOME/.homesick/repos/dotfiles/home/git.sh"
+source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
+[ $RUNNING_IN_DOCKER ] && source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
 
 $HOME/.homesick/repos/homeshick/bin/homeshick --quiet refresh 2

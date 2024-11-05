@@ -5,8 +5,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-#zmodload zsh/zprof
-
 source ~/apps/antigen.zsh
 antigen use oh-my-zsh
 
@@ -31,6 +29,7 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen apply
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
+
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/apps:$PATH
 
@@ -39,17 +38,14 @@ COMPLETION_WAITING_DOTS="true"
 
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
+fpath=($HOME/.zfunc $fpath)
 
-fpath+=~/.zfunc
 autoload -Uz compinit && compinit
-
-# history options
-setopt hist_ignore_all_dups
 
 # *********************
 # command-line fuzzy finder
 # *********************
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -75,17 +71,9 @@ export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 export EDITOR="code -r"
 
 # Include dotfiles
-[ -f ~/.init_shell ] && . ~/.init_shell
-
-source "$HOME/.homesick/repos/dotfiles/home/system.sh"
-source "$HOME/.homesick/repos/dotfiles/home/git.sh"
-source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
-[ $RUNNING_IN_DOCKER ] && source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
-
-[ -f ~/.bash_aliases ] && . ~/.bash_aliases
-[ -f ~/.cargo/env ] && . ~/.cargo/env
+[ -f $HOME/.init_shell ] && source $HOME/.init_shell
+[ -f $HOME/.bash_aliases ] && source $HOME/.bash_aliases
+[ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-#zprof
+[[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
