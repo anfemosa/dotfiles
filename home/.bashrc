@@ -80,13 +80,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-[ -f $HOME/.bash_aliases ] && source $HOME/.bash_aliases
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -98,6 +91,18 @@ if ! shopt -oq posix; then
   fi
 fi
 
-[ -f $HOME/init_shell.sh ] && source $HOME/init_shell.sh
-[ -f $HOME/.cargo/env ] && source "$HOME/.cargo/env"
+# *********************
+# command-line fuzzy finder
+# *********************
+[ -f $HOME/.fzf.bash ] && source $HOME/.fzf.bash
 
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
+
+# *********************
+# User configuration
+# *********************
+
+# Include dotfiles
+[ -f $HOME/init_shell.sh ] && source $HOME/init_shell.sh

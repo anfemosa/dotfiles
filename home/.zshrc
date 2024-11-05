@@ -36,7 +36,8 @@ export PATH=$HOME/apps:$PATH
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
 
-source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+[ -f /usr/share/vcstool-completion/vcs.zsh ] &&  source /usr/share/vcstool-completion/vcs.zsh
+
 fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 fpath=($HOME/.zfunc $fpath)
 
@@ -67,13 +68,8 @@ export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 # User configuration
 # *********************
 
-# Use code as default editor
-export EDITOR="code -r"
-
 # Include dotfiles
 [ -f $HOME/.init_shell ] && source $HOME/.init_shell
-[ -f $HOME/.bash_aliases ] && source $HOME/.bash_aliases
-[ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
