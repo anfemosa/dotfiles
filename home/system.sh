@@ -20,7 +20,7 @@ bindkey -M isearch " " magic-space
 # Determine shell extension
 if [ -z $SHELL ]; then
     echo "SHELL not set"
-    export SHELL=/usr/bin/zsh
+    export SHELL=/bin/zsh
     ext=$(basename ${SHELL});
 else
     ext=$(basename ${SHELL});
@@ -61,7 +61,7 @@ alias mountT='sudo mount -t cifs //tri.lan/tri /mnt/T --verbose -o vers=3.0,user
 
 # Dotfiles
 alias dot='homeshick cd dotfiles && code . && cd -'
-alias dev='cd ${HOME}/srcs/development_environment && code . && cd -'
+alias dev='cd ${HOME}/devenv && code . && cd -'
 
 # Remove all stoped containers
 function pagegui() {

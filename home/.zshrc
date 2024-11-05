@@ -7,15 +7,6 @@ fi
 
 #zmodload zsh/zprof
 
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/apps:$PATH
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-COMPLETION_WAITING_DOTS="true"
-
-source "$HOME/.homesick/repos/homeshick/homeshick.sh"
-fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
-
 source ~/apps/antigen.zsh
 antigen use oh-my-zsh
 
@@ -40,6 +31,20 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen apply
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
+# If you come from bash you might have to change your $PATH.
+export PATH=$HOME/apps:$PATH
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
+
+source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
+
+fpath+=~/.zfunc
+autoload -Uz compinit && compinit
+
+# history options
+setopt hist_ignore_all_dups
 
 # *********************
 # command-line fuzzy finder
