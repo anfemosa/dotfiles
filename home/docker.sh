@@ -17,7 +17,7 @@ function dockbuild(){
     current_dir=$(pwd)
 
     if [ $# -lt 1 ]; then
-        echo "${BLUE} dockbuild: Build a docker image for ROS"
+        echo "${BLUE}dockbuild: Build a docker image for ROS"
         echo "Usage: dockbuild <ROS_DISTRO> [build_args]"
         echo "ROS_DISTRO: Ros distribution. e.g. melodic, noetic, humble, etc."
         echo "build_args:"
@@ -88,7 +88,7 @@ function dockrun() {
     current_dir=$(pwd)
 
     if [ $# -lt 1 ]; then
-        echo "${BLUE} dockrun: Run a docker image for ROS"
+        echo "${BLUE}dockrun: Run a docker image for ROS"
         echo "Usage: dockrun <ROS_DISTRO> [options]"
         echo "ROS_DISTRO:"
         echo "      melodic, noetic, humble, jazzy,etc."
@@ -211,7 +211,7 @@ function dockexec() {
     current_dir=$(pwd)
 
     if [ $# -lt 1 ]; then
-        echo "${BLUE} dockexec: attach to a docker container for ROS"
+        echo "${BLUE}dockexec: attach to a docker container for ROS"
         echo "Usage: dockexec <ROS_DISTRO> [options]"
         echo "ROS_DISTRO: Ros distribution. e.g. melodic, noetic, humble, etc."
         echo "options: "

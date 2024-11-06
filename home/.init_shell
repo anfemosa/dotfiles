@@ -29,7 +29,12 @@ export ext=$(basename ${SHELL});
 # Source dotfiles
 source "$HOME/.homesick/repos/dotfiles/home/system.sh"
 source "$HOME/.homesick/repos/dotfiles/home/git.sh"
-source "$HOME/.homesick/repos/dotfiles/home/docker.sh"
+
+if (command -v docker &> /dev/null) ; 
+then 
+    source "$HOME/.homesick/repos/dotfiles/home/docker.sh"; 
+fi
+
 # if running in docker then source ros
 [ $RUNNING_IN_DOCKER ] && source "$HOME/.homesick/repos/dotfiles/home/ros.sh"
 
