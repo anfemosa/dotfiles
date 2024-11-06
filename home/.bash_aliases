@@ -3,7 +3,6 @@
 # alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # apt aliases
-
 alias apti="sudo apt install -y"
 alias aptu="sudo apt update"
 alias aptg="sudo apt upgrade -y"
@@ -24,6 +23,4 @@ fi
 if command -v trash-put &> /dev/null
 then
     alias rm='trash-put'
-else
-    alias rm='rm -i'
 fi

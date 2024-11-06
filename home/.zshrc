@@ -44,15 +44,6 @@ fpath=($HOME/.zfunc $fpath)
 autoload -Uz compinit && compinit
 
 # *********************
-# command-line fuzzy finder
-# *********************
-[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
-
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
-
-# *********************
 # zsh cache compdump
 # *********************
 
@@ -65,11 +56,20 @@ fi
 export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 
 # *********************
+# command-line fuzzy finder
+# *********************
+[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
+
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
+
+# *********************
 # User configuration
 # *********************
 
 # Include dotfiles
-[ -f $HOME/.init_shell ] && source $HOME/.init_shell
+[ -f $HOME/.homesick/repos/dotfiles/home/.init_shell ] && source $HOME/.homesick/repos/dotfiles/home/.init_shell
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh
+[[ ! -f $HOME/.homesick/repos/dotfiles/home/.p10k.zsh ]] || source $HOME/.homesick/repos/dotfiles/home/.p10k.zsh

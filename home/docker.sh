@@ -10,16 +10,9 @@ alias drmi="docker rmi"
 alias dsp="docker system prune --all"
 alias dimp="docker image prune"
 
-# Auto determine shell extension
-if [ -z $SHELL ]; then
-    echo "${RED}SHELL not set${NC}"
-    export SHELL=/bin/zsh
-    ext=$(basename ${SHELL});
-else
-    ext=$(basename ${SHELL});
-fi
-
 # Build a docker image
+# ToDo: SHELL and SHELL_PATH seem to be the same
+# ToDo: build a base image devenv:ROS_DISTRO and use it to build the workspace images
 function dockbuild(){
     current_dir=$(pwd)
 
@@ -38,6 +31,7 @@ function dockbuild(){
     ros_distro=$1
     shell=${ext}
     shell_path="/bin/${ext}"
+    image_name="devenv:${ros_distro}"
 
 	cd $dockerfiles_path;
 
@@ -64,6 +58,7 @@ function dockbuild(){
             --ws)
                 ws_packages="${3}_${ros_distro}.txt"
                 build_options="${build_options} --build-arg PACKAGES=${ws_packages}"
+                image_name="${3}:${ros_distro}"
                 shift
                 shift
                 ;;
@@ -78,7 +73,7 @@ function dockbuild(){
                 ;;
         esac
     done
-    build_command="docker build -t devenv:${ros_distro} ${build_options} -f devenv.Dockerfile ."
+    build_command="docker build -t ${image_name} ${build_options} -f devenv.Dockerfile ."
     echo "${YELLOW}${build_command}${NC}"
     $(echo "$build_command")
     cd $current_dir
