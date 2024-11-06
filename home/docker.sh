@@ -25,6 +25,7 @@ function dockbuild(){
         echo "      --ws: name of the workspace to install packages. e.g. neurondones"
         echo "      --force: force rebuild the image"
         echo "Whiout build_args, default shell: ${ext}${NC}"
+        cd $current_dir
         return 1
     fi
 
@@ -32,6 +33,7 @@ function dockbuild(){
     shell=${ext}
     shell_path="/bin/${ext}"
     image_name="devenv:${ros_distro}"
+    target="--target devenv"
 
 	cd $dockerfiles_path;
 
@@ -58,7 +60,22 @@ function dockbuild(){
             --ws)
                 ws_packages="${3}_${ros_distro}.txt"
                 build_options="${build_options} --build-arg PACKAGES=${ws_packages}"
+                
+                # Check if the image base devenv exist
+                echo "${YELLOW}Checking if image $image_name exists${NC}"
+                if [[ "$(docker images -q $image_name 2> /dev/null)" == "" ]]; then
+                    echo "${RED}Image base $image_name does not exist${NC}"
+                    echo "${YELLOW}Building image $image_name${NC}"
+                    build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
+                    echo "${YELLOW}${build_command}${NC}"
+                    $(echo "$build_command")
+                    echo "${GREEN}Docker base image ${image_name} successfully built.${NC}"
+                else
+                    echo "${GREEN}Image $image_name exists${NC}"
+                fi
+                echo "${YELLOW}Building workspace extended image${NC}"
                 image_name="${3}:${ros_distro}"
+                target="--target workspace-extended" 
                 shift
                 shift
                 ;;
@@ -69,14 +86,17 @@ function dockbuild(){
                 ;;
             *)
                 echo "${RED}build_args: ${key} not supported${NC}"
+                cd $current_dir
                 return 1
                 ;;
         esac
     done
-    build_command="docker build -t ${image_name} ${build_options} -f devenv.Dockerfile ."
+    build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
     echo "${YELLOW}${build_command}${NC}"
     $(echo "$build_command")
+    echo "${GREEN}Docker image for ${container_name} successfully built.${NC}"
     cd $current_dir
+    return 0
 }
 
 # Run container with rocker
@@ -91,7 +111,7 @@ function dockrun() {
         echo "${BLUE}dockrun: Run a docker image for ROS"
         echo "Usage: dockrun <ROS_DISTRO> [options]"
         echo "ROS_DISTRO:"
-        echo "      melodic, noetic, humble, jazzy,etc."
+        echo "      melodic, noetic, humble, jazzy, etc."
         echo "Options:"
         echo "      --ws: path to workspace. e.g. odin_ws"
         echo "      --share: resource to share with the container, e.g. video, pcan or dev"
@@ -101,14 +121,18 @@ function dockrun() {
         echo "Examples:"
         echo "dockrun humble --ws mairon_ws"
         echo "dockrun noetic --ws neurondones_ws --share pcan"
-        echo "dockrun melodic --ws odinrobot_ws --share video --shell bash${NC}"
+        echo "dockrun humble --ws dummy_ws --share video --shell bash"
+        echo "dockrun jazzy --ws mairon_ws --share video --shell zsh --parse --oyr-spacenav"
+        echo "dockrun humble --ws neurondones_ws --share dev --shell zsh --image neurondones${NC}"
         return 1
     fi
 
-    container_name="$1"
+    ros_distro="$1"
+    container_name="$ros_distro"
     image="devenv:$1"
     docker_shell=${ext}
-    workspace="${HOME}/ros/${container_name}"
+    workspace_base="${HOME}/ros/${container_name}"
+    workspace="${workspace_base}"
     resource_to_share=""
     parse_args=""
     run_options=""
@@ -125,7 +149,8 @@ function dockrun() {
                 shift
                 ;;
             --ws)
-                workspace="${HOME}/ros/${container_name}/$3"
+                ws="$3"
+                workspace="${workspace_base}/${ws}"
                 run_message="${run_message}\nWorkspace: ${workspace}"
                 shift
                 shift
@@ -179,12 +204,13 @@ function dockrun() {
     # Check if the image exist
     if [[ "$(docker images -q $image 2> /dev/null)" == "" ]]; then
         # build the image
-        echo "${GREEN}Docker image for ${container_name} does not exist. Building...${NC}"
-        echo "${YELLOW}dockbuild ${container_name} ${docker_shell}${NC}"
-        if dockbuild ${container_name} --shell ${docker_shell}; then
+        echo "${RED}Docker image for ${image} does not exist. Building...${NC}"
+        
+        if dockbuild ${ros_distro} --shell ${docker_shell} --ws ${ws%_ws}; then
             echo "${GREEN}Docker image for ${container_name} successfully built.${NC}"
         else
             echo "${RED}Docker image for ${container_name} failed to build.${NC}"
+            cd $current_dir
             return 1
         fi
     fi
