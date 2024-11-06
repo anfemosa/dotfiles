@@ -5,18 +5,6 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Override globalalias config
-# space expands all aliases, including global
-bindkey -M emacs "^ " globalias
-bindkey -M viins "^ " globalias
-
-# control-space to make a normal space
-bindkey -M emacs " " magic-space
-bindkey -M viins " " magic-space
-
-# normal space during searches
-bindkey -M isearch " " magic-space
-
 # Determine shell extension
 if [ -z $SHELL ]; then
     echo "SHELL not set"

@@ -71,5 +71,20 @@ export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 # Include dotfiles
 [ -f $HOME/.homesick/repos/dotfiles/home/.init_shell ] && source $HOME/.homesick/repos/dotfiles/home/.init_shell
 
+# history options
+setopt hist_ignore_all_dups
+
+# Override globalalias config
+# space expands all aliases, including global
+bindkey -M emacs "^ " globalias
+bindkey -M viins "^ " globalias
+
+# control-space to make a normal space
+bindkey -M emacs " " magic-space
+bindkey -M viins " " magic-space
+
+# normal space during searches
+bindkey -M isearch " " magic-space
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.homesick/repos/dotfiles/home/.p10k.zsh ]] || source $HOME/.homesick/repos/dotfiles/home/.p10k.zsh
