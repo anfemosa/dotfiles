@@ -79,7 +79,7 @@ function dockbuild(){
                 # Check if the image base devenv exist
                 echo "${YELLOW}Checking if image $image_name exists${NC}"
                 if [[ "$(docker images -q $image_name 2> /dev/null)" == "" ]]; then
-                    echo "${RED}Image base $image_name does not exist${NC}"
+                    echo "${RED}Image base $image_name does not exist. Building it...${NC}"
                     echo "${YELLOW}Building image $image_name${NC}"
                     build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
                     echo "${YELLOW}${build_command}${NC}"
@@ -244,7 +244,7 @@ function dockrun() {
     # Check if the image exist
     if [[ "$(docker images -q $image 2> /dev/null)" == "" ]]; then
         # build the image
-        echo "${RED}Docker image for ${image} does not exist. Building...${NC}"
+        echo "${RED}Docker image for ${image} does not exist. Building it...${NC}"
         
         dockbuild ${ros_distro} --shell ${docker_shell} --ws ${ws%_ws}
         if [[ $? -ne 0 ]]; then
@@ -334,7 +334,7 @@ function dockexec() {
         docker exec -it ${container_name} ${docker_shell} -c "sc"
     else
         # Launch container
-        echo "${RED}Container ${1} does not exist${NC}"
+        echo "${RED}Container ${1} does not exist.${NC}"
         
         # Exit with error
         cd $current_dir
