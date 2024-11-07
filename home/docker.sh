@@ -16,6 +16,20 @@ alias dimp="docker image prune"
 function dockbuild(){
     current_dir=$(pwd)
 
+    # List of supported ROS distros
+    ros_list="kinetic melodic noetic foxy humble jazzy rolling"
+
+    ros_distro=$1
+    
+    # Check if the first argument is a valid ROS version
+    if [[ ! " $ros_list " =~ .*\ $ros_distro\ .* ]]; then
+        echo "${RED}ROS_DISTRO: ${ros_distro} not supported${NC}"
+        
+        # Exit with error
+        cd $current_dir
+        return 1
+    fi
+
     if [ $# -lt 1 ]; then
         echo "${BLUE}dockbuild: Build a docker image for ROS"
         echo "Usage: dockbuild <ROS_DISTRO> [build_args]"
@@ -29,7 +43,6 @@ function dockbuild(){
         return 1
     fi
 
-    ros_distro=$1
     shell=${ext}
     shell_path="/bin/${ext}"
     image_name="devenv:${ros_distro}"
@@ -49,6 +62,8 @@ function dockbuild(){
                         ;;
                     *)
                         echo "${RED}SHELL: ${shell} not supported${NC}"
+
+                        # Exit with error
                         cd $current_dir
                         return 1
                     ;;
@@ -69,7 +84,6 @@ function dockbuild(){
                     build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
                     echo "${YELLOW}${build_command}${NC}"
                     $(echo "$build_command")
-                    echo "${GREEN}Docker base image ${image_name} successfully built.${NC}"
                 else
                     echo "${GREEN}Image $image_name exists${NC}"
                 fi
@@ -86,6 +100,8 @@ function dockbuild(){
                 ;;
             *)
                 echo "${RED}build_args: ${key} not supported${NC}"
+                
+                # Exit with error
                 cd $current_dir
                 return 1
                 ;;
@@ -94,7 +110,9 @@ function dockbuild(){
     build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
     echo "${YELLOW}${build_command}${NC}"
     $(echo "$build_command")
-    echo "${GREEN}Docker image for ${container_name} successfully built.${NC}"
+
+    # Exit with success
+    echo "${GREEN}Docker image for ${container_name} successfully built${NC}"
     cd $current_dir
     return 0
 }
@@ -107,11 +125,25 @@ function dockbuild(){
 function dockrun() {
     current_dir=$(pwd)
 
+    # List of supported ROS distros
+    ros_list="kinetic melodic noetic foxy humble jazzy rolling"
+
+    ros_distro=$1
+    
+    # Check if the first argument is a valid ROS version
+    if [[ ! " $ros_list " =~ .*\ $ros_distro\ .* ]]; then
+        echo "${RED}ROS_DISTRO: ${ros_distro} not supported${NC}"
+        
+        # Exit with error
+        cd $current_dir
+        return 1
+    fi
+
     if [ $# -lt 1 ]; then
         echo "${BLUE}dockrun: Run a docker image for ROS"
         echo "Usage: dockrun <ROS_DISTRO> [options]"
         echo "ROS_DISTRO:"
-        echo "      melodic, noetic, humble, jazzy, etc."
+        echo "      kinetic, melodic, noetic, foxy, humble, jazzy, or rolling"
         echo "Options:"
         echo "      --ws: path to workspace. e.g. odin_ws"
         echo "      --share: resource to share with the container, e.g. video, pcan or dev"
@@ -124,10 +156,12 @@ function dockrun() {
         echo "dockrun humble --ws dummy_ws --share video --shell bash"
         echo "dockrun jazzy --ws mairon_ws --share video --shell zsh --parse --oyr-spacenav"
         echo "dockrun humble --ws neurondones_ws --share dev --shell zsh --image neurondones${NC}"
+        
+        # Exit with error
+        cd $current_dir
         return 1
     fi
 
-    ros_distro="$1"
     container_name="$ros_distro"
     image="devenv:$1"
     docker_shell=${ext}
@@ -174,7 +208,10 @@ function dockrun() {
                         resource_to_share=" --volume /dev:/dev"
                         ;;
                     *)
-                        echo "Resource not supported: ${resource}"
+                        echo "${RED}Resource not supported: ${resource}${NC}"
+                        
+                        # Exit with error
+                        cd $current_dir
                         return 1
                         ;;
                 esac
@@ -190,8 +227,11 @@ function dockrun() {
                 shift
                 shift
                 ;;
-            *)  # Unknown option
-                echo "Unknown option: $2"
+            *)
+                echo "${RED}build_args: ${key} not supported${NC}"
+                
+                # Exit with error
+                cd $current_dir
                 return 1
                 ;;
         esac
@@ -206,10 +246,11 @@ function dockrun() {
         # build the image
         echo "${RED}Docker image for ${image} does not exist. Building...${NC}"
         
-        if dockbuild ${ros_distro} --shell ${docker_shell} --ws ${ws%_ws}; then
-            echo "${GREEN}Docker image for ${container_name} successfully built.${NC}"
-        else
+        dockbuild ${ros_distro} --shell ${docker_shell} --ws ${ws%_ws}
+        if [[ $? -ne 0 ]]; then
             echo "${RED}Docker image for ${container_name} failed to build.${NC}"
+            
+            # Exit with error
             cd $current_dir
             return 1
         fi
@@ -230,7 +271,9 @@ function dockrun() {
         $(echo "$rocker_command")
     fi
 
+    # Exit with success
     cd $current_dir
+    return 0
 }
 
 function dockexec() {
@@ -245,6 +288,9 @@ function dockexec() {
         echo "      --shell: shell to use in the container. e.g. bash or zsh"
         echo "Example:"
         echo "dockexec noetic --ws neurondones_ws --shell bash${NC}"
+        
+        # Exit with error
+        cd $current_dir
         return 1
     fi
 
@@ -266,8 +312,11 @@ function dockexec() {
                 shift
                 shift
                 ;;
-            *)  # Unknown option
-                echo "Unknown option: $2"
+            *)
+                echo "${RED}Unknown option: $2${NC}"
+                
+                # Exit with error
+                cd $current_dir
                 return 1
                 ;;
         esac
@@ -286,16 +335,20 @@ function dockexec() {
     else
         # Launch container
         echo "${RED}Container ${1} does not exist${NC}"
+        
+        # Exit with error
         cd $current_dir
         return 1
     fi
 
+    # Exit with success
     cd $current_dir
+    return 0
 }
 
 # Remove all stoped containers
 function drma() {
-	drm $(docker ps -a -f status=exited -q)
+	drm $(docker ps -a -f status=exited -q)    
 }
 
 
