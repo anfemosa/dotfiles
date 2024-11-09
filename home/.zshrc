@@ -68,6 +68,8 @@ export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 # User configuration
 # *********************
 
+export SHELL=/bin/zsh
+
 # Include dotfiles
 [ -f $HOME/.homesick/repos/dotfiles/home/.init_shell ] && source $HOME/.homesick/repos/dotfiles/home/.init_shell
 
