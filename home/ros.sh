@@ -2,7 +2,7 @@
 # ROS aliases and functions
 ###################################################################
 
-if [[ "${ROS_DISTRO}" == "noetic" || "${ROS_DISTRO}" == "melodic" ]]; then
+if [[ "${ROS_DISTRO}" == "noetic" || "${ROS_DISTRO}" == "melodic" || "${ROS_DISTRO}" == "kinetic" ]]; then
     export ROS_VERSION=1
 else
     export ROS_VERSION=2
@@ -21,12 +21,10 @@ if [[ "${ROS_VERSION}" -eq 2 ]]; then
 fi
 
 # Source rosmon
-function sourcerosmon(){
+function sc_rosmon(){
     if [[ "${ROS_VERSION}" -eq 1 ]]; then
         if [[ -f "/opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}" ]]; then
             source /opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}
-        else
-            echo "rosmon not found."
         fi
     fi
 }
@@ -37,30 +35,31 @@ function roshome(){
 }
 
 # Source the current workspace
-function sourcews(){
-    current_dir=$(pwd)
-    cropped=${PWD#${HOME}/ros/${ROS_DISTRO}/}
-    ws_name=${cropped%%/*}
-    ws_path=${HOME}/ros/${ROS_DISTRO}/${ws_name}
+function sc_ws(){
+    local current_dir="$PWD"
+    local workspace_dir=""
+    local config_file=""
 
     if [[ "${ROS_VERSION}" -eq 1 ]]
     then
-        FILE=${ws_path}/devel/setup.${ext}
+        config_file=devel/setup.${ext}
     else
-        FILE=${ws_path}/install/setup.${ext}
+        config_file=install/setup.${ext}
     fi
 
-    # if PWD belongs to ROS workspace then source it
-    if [[ -f $FILE ]]; then
-        cd ${ws_path}
-        echo "${GREEN}Sourcing workspace: ${FILE}${NC}"
-        source $FILE && sourcerosmon
-        cd ${current_dir}
-        export ROS_HOME=${ws_path}
-    else
-        # echo "${RED}Workspace not found: ${FILE}${NC}"
-        export ROS_HOME=/opt/ros/${ROS_DISTRO}
-    fi
+    # Subimos en los directorios para buscar el workspace de ROS
+    while [[ "$current_dir" != "/" ]]; do
+        # Revisar si estamos en un workspace de ROS[1-2]
+        if [[ -f "$current_dir/$config_file" ]]; then
+            workspace_dir="$current_dir"
+            echo "${GREEN}Sourcing workspace: ${FILE}${NC}"
+            source "$current_dir/$config_file" && sc_rosmon
+            export ROS_HOME=$workspace_dir
+            break
+        fi
+        # Subimos un nivel de directorio
+        current_dir="$(dirname "$current_dir")"
+    done
 }
 
 # Source the ros base installation
@@ -69,7 +68,7 @@ function sourceros(){
     # In ROS 1 source rosmon
     if [[ "${ROS_VERSION}" -eq 1 ]]
     then
-        sourcerosmon
+        sc_rosmon
     fi
 }
 
@@ -85,7 +84,7 @@ function cb() {
         colcon build --parallel-workers 6 "$@"
     fi
 
-    sourcews
+    sc_ws
     cd ${pwd_cb}
 }
 
@@ -116,7 +115,7 @@ function runci(){
     fi
 }
 
-alias sc=sourcews
+alias sc=sc_ws
 
 # Check if ROS_DISTRO is set.
 if [[ -z "${ROS_DISTRO}" ]]; then
@@ -130,7 +129,7 @@ if [[ -z "${ROS_DISTRO}" ]]; then
         #echo "${YELLOW}ROS is not installed.${NC}"
     fi
 else
-    sourcews
+    sc_ws
 fi
 
 alias resetROS='ros2 daemon stop && ros2 daemon start'
