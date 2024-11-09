@@ -5,15 +5,6 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Determine shell extension
-if [ -z $SHELL ]; then
-    echo "SHELL not set"
-    export SHELL=/bin/zsh
-    ext=$(basename ${SHELL});
-else
-    ext=$(basename ${SHELL});
-fi
-
 # lsd
 if command -v lsd &> /dev/null
 then
