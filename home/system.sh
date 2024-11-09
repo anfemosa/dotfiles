@@ -1,10 +1,3 @@
-# Define color codes
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
 # lsd
 if command -v lsd &> /dev/null
 then
@@ -15,11 +8,10 @@ then
     alias lla='lsd -lha --group-dirs=first'
     alias ls='lsd --group-dirs=first'
 else
-    alias ll='ls -lh'
-    alias la='ls -a'
-    alias l='ls'
+    alias ll='ls -alF'
+    alias la='ls -A'
+    alias l='ls -CF'
     alias lla='ls -lha'
-    alias ls='ls'
 fi
 
 # bat ==> cat
