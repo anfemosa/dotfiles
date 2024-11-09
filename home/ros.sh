@@ -52,7 +52,7 @@ function sc_ws(){
         # Revisar si estamos en un workspace de ROS[1-2]
         if [[ -f "$current_dir/$config_file" ]]; then
             workspace_dir="$current_dir"
-            echo "${GREEN}Sourcing workspace: ${FILE}${NC}"
+            echo "${GREEN}Sourcing workspace: $current_dir/$config_file${NC}"
             source "$current_dir/$config_file" && sc_rosmon
             export ROS_HOME=$workspace_dir
             break
