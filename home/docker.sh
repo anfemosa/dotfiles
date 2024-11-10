@@ -363,6 +363,12 @@ function dsr() {
 	docker rm $1
 }
 
+function cleandev() {
+    if [ -d /home/andres/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers]; then
+        rm -rf /home/andres/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers
+    fi
+}
+
 # function runpythonsyntax(){
 # 	rocker --home --name python_syntax tecnalia-docker-dev.artifact.tecnalia.com/docker:git
 # }
