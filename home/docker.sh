@@ -364,8 +364,11 @@ function dsr() {
 }
 
 function cleandevc() {
-    if [ -d /home/andres/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers]; then
+    if [ -d $HOME/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers ]; then
         rm -rf /home/andres/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers
+    fi
+    if [ -d $HOME/.config/Code/User/workspaceStorage ]; then
+        rm -rf /home/andres/.config/Code/User/workspaceStorage
     fi
 }
 
