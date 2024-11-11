@@ -20,11 +20,11 @@ function dockbuild(){
     ros_list="kinetic melodic noetic foxy humble jazzy rolling"
 
     ros_distro=$1
-    
+
     # Check if the first argument is a valid ROS version
     if [[ ! " $ros_list " =~ .*\ $ros_distro\ .* ]]; then
         echo "${RED}ROS_DISTRO: ${ros_distro} not supported${NC}"
-        
+
         # Exit with error
         cd $current_dir
         return 1
@@ -75,7 +75,7 @@ function dockbuild(){
             --ws)
                 ws_packages="${3}_${ros_distro}.txt"
                 build_options="${build_options} --build-arg PACKAGES=${ws_packages}"
-                
+
                 # Check if the image base devenv exist
                 echo "${YELLOW}Checking if image $image_name exists${NC}"
                 if [[ "$(docker images -q $image_name 2> /dev/null)" == "" ]]; then
@@ -89,7 +89,7 @@ function dockbuild(){
                 fi
                 echo "${YELLOW}Building workspace extended image${NC}"
                 image_name="${3}:${ros_distro}"
-                target="--target workspace-extended" 
+                target="--target workspace-extended"
                 shift
                 shift
                 ;;
@@ -100,7 +100,7 @@ function dockbuild(){
                 ;;
             *)
                 echo "${RED}build_args: ${key} not supported${NC}"
-                
+
                 # Exit with error
                 cd $current_dir
                 return 1
@@ -129,11 +129,11 @@ function dockrun() {
     ros_list="kinetic melodic noetic foxy humble jazzy rolling"
 
     ros_distro=$1
-    
+
     # Check if the first argument is a valid ROS version
     if [[ ! " $ros_list " =~ .*\ $ros_distro\ .* ]]; then
         echo "${RED}ROS_DISTRO: ${ros_distro} not supported${NC}"
-        
+
         # Exit with error
         cd $current_dir
         return 1
@@ -156,7 +156,7 @@ function dockrun() {
         echo "dockrun humble --ws dummy_ws --share video --shell bash"
         echo "dockrun jazzy --ws mairon_ws --share video --shell zsh --parse --oyr-spacenav"
         echo "dockrun humble --ws neurondones_ws --share dev --shell zsh --image neurondones${NC}"
-        
+
         # Exit with error
         cd $current_dir
         return 1
@@ -209,7 +209,7 @@ function dockrun() {
                         ;;
                     *)
                         echo "${RED}Resource not supported: ${resource}${NC}"
-                        
+
                         # Exit with error
                         cd $current_dir
                         return 1
@@ -229,7 +229,7 @@ function dockrun() {
                 ;;
             *)
                 echo "${RED}build_args: ${key} not supported${NC}"
-                
+
                 # Exit with error
                 cd $current_dir
                 return 1
@@ -245,11 +245,11 @@ function dockrun() {
     if [[ "$(docker images -q $image 2> /dev/null)" == "" ]]; then
         # build the image
         echo "${RED}Docker image for ${image} does not exist. Building it...${NC}"
-        
+
         dockbuild ${ros_distro} --shell ${docker_shell} --ws ${ws%_ws}
         if [[ $? -ne 0 ]]; then
             echo "${RED}Docker image for ${container_name} failed to build.${NC}"
-            
+
             # Exit with error
             cd $current_dir
             return 1
@@ -288,7 +288,7 @@ function dockexec() {
         echo "      --shell: shell to use in the container. e.g. bash or zsh"
         echo "Example:"
         echo "dockexec noetic --ws neurondones_ws --shell bash${NC}"
-        
+
         # Exit with error
         cd $current_dir
         return 1
@@ -314,7 +314,7 @@ function dockexec() {
                 ;;
             *)
                 echo "${RED}Unknown option: $2${NC}"
-                
+
                 # Exit with error
                 cd $current_dir
                 return 1
@@ -335,7 +335,7 @@ function dockexec() {
     else
         # Launch container
         echo "${RED}Container ${1} does not exist.${NC}"
-        
+
         # Exit with error
         cd $current_dir
         return 1
@@ -348,7 +348,7 @@ function dockexec() {
 
 # Remove all stoped containers
 function drma() {
-	drm $(docker ps -a -f status=exited -q)    
+	drm $(docker ps -a -f status=exited -q)
 }
 
 
@@ -363,12 +363,22 @@ function dsr() {
 	docker rm $1
 }
 
-function cleandevc() {
+function cleancode() {
     if [ -d $HOME/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers ]; then
-        rm -rf /home/andres/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers
+        rm -rf $HOME/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers
+        echo "${BLUE}Removed ms-vscode-remote.remote-containers${NC}"
     fi
     if [ -d $HOME/.config/Code/User/workspaceStorage ]; then
-        rm -rf /home/andres/.config/Code/User/workspaceStorage
+        rm -rf $HOME/.config/Code/User/workspaceStorage
+        echo "${BLUE}Removed workspaceStorage${NC}"
+    fi
+    if [ -d $HOME/.config/Code/Cache ]; then
+        rm -rf $HOME/.config/Code/Cache
+        echo "${BLUE}Removed code Cache${NC}"
+    fi
+    if [ -d $HOME/.config/Code/CachedData ]; then
+        rm -rf $HOME/.config/Code/CachedData
+        echo "${BLUE}Removed code CachedData${NC}"
     fi
 }
 
