@@ -331,7 +331,7 @@ function dockexec() {
         echo "shell: ${docker_shell}${NC}"
         # Attach to container
         echo "${GREEN}docker exec -it ${container_name} ${docker_shell}${NC}"
-        docker exec -it ${container_name} ${docker_shell} -c "sc"
+        docker exec -it ${container_name} ${docker_shell}
     else
         # Launch container
         echo "${RED}Container ${1} does not exist.${NC}"
