@@ -17,6 +17,8 @@ export LIGHT_GRAY='\e[0;37m'
 export WHITE='\e[1;37m'
 export NC='\e[0m' # No Color
 
+alias echo='echo -e'
+
 # Eternal bash history.
 # ---------------------
 # Undocumented feature which sets the size to "unlimited".
@@ -46,9 +48,9 @@ export ext=$(basename ${SHELL});
 source "$HOME/.homesick/repos/dotfiles/home/system.sh"
 source "$HOME/.homesick/repos/dotfiles/home/git.sh"
 
-if (command -v docker &> /dev/null) ; 
-then 
-    source "$HOME/.homesick/repos/dotfiles/home/docker.sh"; 
+if (command -v docker &> /dev/null) ;
+then
+    source "$HOME/.homesick/repos/dotfiles/home/docker.sh";
 fi
 
 # if running in docker then source ros
