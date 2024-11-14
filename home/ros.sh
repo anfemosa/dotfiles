@@ -60,10 +60,14 @@ function sc_ws(){
         # Subimos un nivel de directorio
         current_dir="$(dirname "$current_dir")"
     done
+
+    if [[ "$workspace_dir" != "/" ]]; then
+        echo "${RED}Not in a workspace!${NC}"
+    fi
 }
 
 # Source the ros base installation
-function sourceros(){
+function sc_ros(){
     source /opt/ros/${ROS_DISTRO}/setup.${ext}
     # In ROS 1 source rosmon
     if [[ "${ROS_VERSION}" -eq 1 ]]
