@@ -295,7 +295,7 @@ function dockexec() {
     fi
 
     container_name="$1"
-    workspace="${HOME}/ros/${container_name}"
+    workspace="${HOME}"
     docker_shell=${ext}
 
     while [[ $# -gt 1 ]]; do
@@ -303,7 +303,7 @@ function dockexec() {
 
         case $key in
             --ws)
-                workspace="${HOME}/ros/${container_name}/$3"
+                workspace="$3"
                 shift
                 shift
                 ;;
@@ -322,7 +322,7 @@ function dockexec() {
         esac
     done
 
-    cd ${workspace}
+    # cd ${workspace}
 
     # Check if the container exist
     if [[ $(docker ps -aq -f name=${container_name}) ]]; then
@@ -330,8 +330,8 @@ function dockexec() {
         echo "${BLUE}workspace: ${workspace}"
         echo "shell: ${docker_shell}${NC}"
         # Attach to container
-        echo "${GREEN}docker exec -it ${container_name} ${docker_shell}${NC}"
-        docker exec -it ${container_name} ${docker_shell}
+        echo "${GREEN}docker exec -it ${container_name} ${docker_shell} -c \"cd ${workspace}; ${docker_shell}\"${NC}"
+        docker exec -it ${container_name} ${docker_shell} -c "cd ${workspace}; ${docker_shell}"
     else
         # Launch container
         echo "${RED}Container ${1} does not exist.${NC}"
