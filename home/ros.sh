@@ -61,7 +61,7 @@ function sc_ws(){
         current_dir="$(dirname "$current_dir")"
     done
 
-    if [[ "$workspace_dir" != "/" ]]; then
+    if [[ "$workspace_dir" == "/" ]]; then
         echo "${RED}Not in a workspace!${NC}"
     fi
 }
