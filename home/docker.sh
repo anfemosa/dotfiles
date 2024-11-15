@@ -2,6 +2,11 @@
 export dockerfiles_path=~/devenv/dockerfiles;
 
 # docker common commands
+# if command -v podman &> /dev/null
+# then
+#     alias docker="podman"
+# fi
+
 alias dim="docker images"
 alias dpsa="docker ps -a"
 alias dps="docker ps"
@@ -107,6 +112,7 @@ function dockbuild(){
                 ;;
         esac
     done
+    # --format docker for podman
     build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
     echo "${YELLOW}${build_command}${NC}"
     $(echo "$build_command")
