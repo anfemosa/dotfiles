@@ -80,7 +80,7 @@ function sc_ros(){
 
 # Automatic catkin build
 function cb() {
-    pwd_cb=$(pwd)
+    local pwd_cb=$(pwd)
     roshome
 
     if [[ "${ROS_VERSION}" -eq 1 ]]
@@ -96,7 +96,7 @@ function cb() {
 
 # Clean the workspace by deleting the generated folders (build, log, devel/install).
 function clean_ws(){
-    pwd_cb=$(pwd)
+    local pwd_cb=$(pwd)
     if [[ "${ROS_VERSION}" -eq 1 ]]
     then
         roshome && rm -rf build devel install
@@ -133,7 +133,7 @@ function runci(){
 
 # Check if ROS_DISTRO is set.
 if [[ -z "${ROS_DISTRO}" ]]; then
-    ROS_DIR=/opt/ros
+    local ROS_DIR=/opt/ros
     if [ -d "${ROS_DIR}" ];
     then
         export ROS_DISTRO=$(basename $(find /opt/ros/* -maxdepth 0 -type d | head -1))

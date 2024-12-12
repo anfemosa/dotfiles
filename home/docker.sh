@@ -19,12 +19,12 @@ alias dimp="docker image prune"
 # ToDo: SHELL and SHELL_PATH seem to be the same
 # ToDo: build a base image devenv:ROS_DISTRO and use it to build the workspace images
 function dockbuild(){
-    current_dir=$(pwd)
+    local current_dir=$(pwd)
 
     # List of supported ROS distros
-    ros_list="kinetic melodic noetic foxy humble jazzy rolling"
+    local ros_list="kinetic melodic noetic foxy humble jazzy rolling"
 
-    ros_distro=$1
+    local ros_distro=$1
 
     # Check if the first argument is a valid ROS version
     if [[ ! " $ros_list " =~ .*\ $ros_distro\ .* ]]; then
@@ -48,17 +48,18 @@ function dockbuild(){
         return 1
     fi
 
-    shell=${ext}
-    shell_path="/bin/${ext}"
-    image_name="devenv:${ros_distro}"
-    target="--target devenv"
+    local shell=${ext}
+    local shell_path="/bin/${ext}"
+    local image_name="devenv:${ros_distro}"
+    local target="--target devenv"
 
 	cd $dockerfiles_path;
 
-    build_options="--build-arg ROS_DISTRO=${ros_distro}"
+    local build_options="--build-arg ROS_DISTRO=${ros_distro}"
+    local build_command="docker build"
 
     while [[ $# -gt 1 ]]; do
-        key="$2"
+        local key="$2"
         case $key in
             --shell)
                 shell="$3"
@@ -78,7 +79,7 @@ function dockbuild(){
                 shift
                 ;;
             --ws)
-                ws_packages="${3}_${ros_distro}.txt"
+                local ws_packages="${3}_${ros_distro}.txt"
                 build_options="${build_options} --build-arg PACKAGES=${ws_packages}"
 
                 # Check if the image base devenv exist
@@ -101,6 +102,21 @@ function dockbuild(){
             --force)
                 echo "${YELLOW}Force rebuild the image${NC}"
                 build_options="${build_options} --no-cache"
+                shift
+                ;;
+            --peak)
+                echo "${YELLOW}Installing PeakCAN driver${NC}"
+                build_options="${build_options} --build-arg PEAK_DRIVER=install"
+                shift
+                ;;
+            --open3d)
+                echo "${YELLOW}Installing Open3D driver${NC}"
+                build_options="${build_options} --build-arg OPEN3D=install"
+                shift
+                ;;
+            --conan)
+                echo "${YELLOW}Installing Conan compiler${NC}"
+                build_options="${build_options} --build-arg CONAN=install"
                 shift
                 ;;
             *)
@@ -129,12 +145,12 @@ function dockbuild(){
 # To share pcan --volume /dev/pcanusb32:/dev/pcanusb32
 # To share dev folder --volume /dev:/dev
 function dockrun() {
-    current_dir=$(pwd)
+    local current_dir=$(pwd)
 
     # List of supported ROS distros
-    ros_list="kinetic melodic noetic foxy humble jazzy rolling"
+    local ros_list="kinetic melodic noetic foxy humble jazzy rolling"
 
-    ros_distro=$1
+    local ros_distro=$1
 
     # Check if the first argument is a valid ROS version
     if [[ ! " $ros_list " =~ .*\ $ros_distro\ .* ]]; then
@@ -168,18 +184,18 @@ function dockrun() {
         return 1
     fi
 
-    container_name="$ros_distro"
-    image="devenv:$1"
-    docker_shell=${ext}
-    workspace_base="${HOME}/ros/${container_name}"
-    workspace="${workspace_base}"
-    resource_to_share=""
-    parse_args=""
-    run_options=""
-    run_message="Container name: ${container_name}"
+    local container_name="$ros_distro"
+    local image="devenv:$ros_distro"
+    local docker_shell=${ext}
+    local workspace_base="${HOME}"
+    local workspace="${workspace_base}"
+    local resource_to_share=""
+    local parse_args=""
+    local run_options=""
+    local run_message="Container name: ${container_name}"
 
     while [[ $# -gt 1 ]]; do
-        key="$2"
+        local key="$2"
 
         case $key in
             --image)
@@ -189,7 +205,7 @@ function dockrun() {
                 shift
                 ;;
             --ws)
-                ws="$3"
+                local ws="$3"
                 workspace="${workspace_base}/${ws}"
                 run_message="${run_message}\nWorkspace: ${workspace}"
                 shift
@@ -202,7 +218,7 @@ function dockrun() {
                 shift
                 ;;
             --share)
-                resource=$3
+                local resource=$3
                 case $resource in
                     video)
                         resource_to_share="${resource_to_share} --volume /dev/video0:/dev/video0"
@@ -272,7 +288,7 @@ function dockrun() {
     else
         echo "${GREEN}Container ${container_name} not running. Launching...${NC}"
         # Launch container
-        rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --x11 --network host ${run_options} --name ${container_name} ${image} ${docker_shell}"
+        local rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --x11 --network host ${run_options} --name ${container_name} ${image} ${docker_shell}"
         echo "${YELLOW}${rocker_command}${NC}"
         $(echo "$rocker_command")
     fi
@@ -283,7 +299,7 @@ function dockrun() {
 }
 
 function dockexec() {
-    current_dir=$(pwd)
+    local current_dir=$(pwd)
 
     if [ $# -lt 1 ]; then
         echo "${BLUE}dockexec: attach to a docker container for ROS"
@@ -300,12 +316,12 @@ function dockexec() {
         return 1
     fi
 
-    container_name="$1"
-    workspace="${HOME}"
-    docker_shell=${ext}
+    local container_name="$1"
+    local workspace="${HOME}"
+    local docker_shell=${ext}
 
     while [[ $# -gt 1 ]]; do
-        key="$2"
+        local key="$2"
 
         case $key in
             --ws)
