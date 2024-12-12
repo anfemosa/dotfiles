@@ -66,6 +66,8 @@ function sc_ws(){
     fi
 }
 
+alias sc=sc_ws
+
 # Source the ros base installation
 function sc_ros(){
     source /opt/ros/${ROS_DISTRO}/setup.${ext}
@@ -92,19 +94,29 @@ function cb() {
     cd ${pwd_cb}
 }
 
-# Clean workspace (delete the generated folders, then catkin build)
-function cbclean(){
+# Clean the workspace by deleting the generated folders (build, log, devel/install).
+function clean_ws(){
+    pwd_cb=$(pwd)
     if [[ "${ROS_VERSION}" -eq 1 ]]
     then
-        roshome && rm -rf build devel install && catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release
+        roshome && rm -rf build devel install
     else
-        rm -rf build log install && cb "$@"
+        roshome && rm -rf build log install
     fi
+    cd ${pwd_cb}
+}
+
+# Clean workspace (delete the generated folders) then build ws
+function cbclean(){
+    clean_ws && cb "$@"
 }
 
 # Initialize catkin workspace, configure and build it
 function cib(){
-    catkin init && catkin config --extend /opt/ros/${ROS_DISTRO} && catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release
+    if [[ "${ROS_VERSION}" -eq 1 ]]
+    then
+        catkin init && catkin config --extend /opt/ros/${ROS_DISTRO} && catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release
+    fi
 }
 
 # Run ci locally
@@ -118,8 +130,6 @@ function runci(){
         find ../ -name run_ci -exec bash {} ROS_DISTRO="$@" DOCKER_IMAGE=tecnalia-robotics-docker.artifact.tecnalia.com/flexbotics-base-devel:"$@" \;
     fi
 }
-
-alias sc=sc_ws
 
 # Check if ROS_DISTRO is set.
 if [[ -z "${ROS_DISTRO}" ]]; then
