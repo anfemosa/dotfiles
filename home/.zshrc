@@ -19,7 +19,7 @@ antigen bundle last-working-dir
 antigen bundle sudo
 antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle wfxr/forgit
+antigen bundle 'wfxr/forgit'
 antigen bundle paulirish/git-open
 antigen bundle popstas/zsh-command-time
 antigen bundle MichaelAquilina/zsh-auto-notify
@@ -42,6 +42,9 @@ fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
 fpath=($HOME/.zfunc $fpath)
 
 autoload -Uz compinit && compinit
+autoload -U bashcompinit && bashcompinit
+
+eval "$(register-python-argcomplete3 pipx)"
 
 # *********************
 # zsh cache compdump
@@ -90,3 +93,6 @@ bindkey -M isearch " " magic-space
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.homesick/repos/dotfiles/home/.p10k.zsh ]] || source $HOME/.homesick/repos/dotfiles/home/.p10k.zsh
+
+# Created by `pipx` on 2024-12-19 16:39:58
+export PATH="$PATH:/home/TRI.LAN/110343/.local/bin"

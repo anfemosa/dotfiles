@@ -100,9 +100,13 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 
+eval "$(register-python-argcomplete3 pipx)"
+
 # *********************
 # User configuration
 # *********************
 
 # Include dotfiles
 [ -f $HOME/.homesick/repos/dotfiles/home/.init_shell ] && source $HOME/.homesick/repos/dotfiles/home/.init_shell
+
+exec zsh
