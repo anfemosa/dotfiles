@@ -19,12 +19,13 @@ antigen bundle last-working-dir
 antigen bundle sudo
 antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle 'wfxr/forgit'
+antigen bundle wfxr/forgit@main
 antigen bundle paulirish/git-open
 antigen bundle popstas/zsh-command-time
 antigen bundle MichaelAquilina/zsh-auto-notify
 antigen bundle MichaelAquilina/zsh-you-should-use
 antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle atuinsh/atuin@main
 
 antigen apply
 
@@ -61,11 +62,16 @@ export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 # *********************
 # command-line fuzzy finder
 # *********************
-[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
+# [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
 
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
+# if command -v fzf &> /dev/null
+# then
+#     source <(fzf --zsh)
+# fi
+
+# export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
+# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 
 # *********************
 # User configuration
@@ -96,3 +102,9 @@ bindkey -M isearch " " magic-space
 
 # Created by `pipx` on 2024-12-19 16:39:58
 export PATH="$PATH:/home/TRI.LAN/110343/.local/bin"
+
+[ -f  "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
+if command -v atuin &> /dev/null
+then
+  eval "$(atuin init zsh)"
+fi
