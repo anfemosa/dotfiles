@@ -104,7 +104,7 @@ fi
 # export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 
-# eval "$(register-python-argcomplete3 pipx)"
+eval "$(register-python-argcomplete3 pipx)"
 
 # *********************
 # User configuration
@@ -119,4 +119,5 @@ if command -v atuin &>/dev/null; then
     eval "$(atuin init bash)"
 fi
 
+# Launch zsh if it is installed
 exec zsh
