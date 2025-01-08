@@ -161,7 +161,7 @@ bindkey -M isearch " " magic-space
 [[ ! -f $HOME/.homesick/repos/dotfiles/home/.p10k.zsh ]] || source $HOME/.homesick/repos/dotfiles/home/.p10k.zsh
 
 # Created by `pipx` on 2024-12-19 16:39:58
-export PATH="$PATH:/home/TRI.LAN/110343/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 [ -f  "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
 if command -v atuin &> /dev/null
