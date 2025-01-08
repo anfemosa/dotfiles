@@ -14,6 +14,8 @@ fi
 # Zsh configuration
 # -----------------
 
+export SHELL=$(which zsh)
+
 #
 # Cache
 #
