@@ -1,6 +1,5 @@
 # lsd
-if command -v lsd &> /dev/null
-then
+if command -v lsd &>/dev/null; then
     # Directories
     alias ll='lsd -lh --group-dirs=first'
     alias la='lsd -a --group-dirs=first'
@@ -15,15 +14,19 @@ else
 fi
 
 # bat ==> cat
-if command -v bat &> /dev/null
-then
+# Ubuntu
+if command -v batcat &>/dev/null; then
+    # Files
+    alias cat='batcat'
+fi
+# Debian
+if command -v bat &>/dev/null; then
     # Files
     alias cat='bat'
 fi
 
 # Python
-if command -v ipython &> /dev/null
-then
+if command -v ipython &>/dev/null; then
     alias ipy='ipython'
 fi
 
