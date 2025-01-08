@@ -4,8 +4,11 @@
 # zimfw plugin manager.
 #
 
+#
+# Powerlevel10k Theme
+#
+
 zmodule romkatv/powerlevel10k --use degit
-# zstyle ':zim:zmodule' use 'romkatv/powerlevel10k'
 
 #
 # Modules
@@ -14,13 +17,37 @@ zmodule romkatv/powerlevel10k --use degit
 # Sets sane Zsh built-in environment options.
 zmodule environment
 # Provides handy git aliases and functions.
-zmodule git
+# zmodule git
 # Applies correct bindkeys for input events.
 zmodule input
 # Sets a custom terminal title.
-zmodule termtitle
+# zmodule termtitle
 # Utility aliases and functions. Adds colour to ls, grep and less.
 zmodule utility
+# direnv integration
+zmodule direnv
+
+#
+# oh-my-zsh
+#
+zmodule ohmyzsh/ohmyzsh --root plugins/command-not-found
+zmodule ohmyzsh/ohmyzsh --root plugins/globalias
+zmodule ohmyzsh/ohmyzsh --root plugins/last-working-dir
+zmodule ohmyzsh/ohmyzsh --root plugins/sudo
+zmodule ohmyzsh/ohmyzsh --root plugins/colored-man-pages
+
+#
+# zsh plugins
+#
+
+zmodule MichaelAquilina/zsh-you-should-use
+
+#
+# zsh completions ATUIN
+#
+
+zmodule atuinsh/atuin
+
 
 #
 # Prompt
@@ -55,5 +82,8 @@ zmodule zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-history-substring-search
 # Fish-like autosuggestions for Zsh.
 zmodule zsh-users/zsh-autosuggestions
+# docker aliases
+zmodule ohmyzsh/ohmyzsh --root plugins/docker
+zmodule ohmyzsh/ohmyzsh --root plugins/git
 # }}} End configuration added by Zim install
 
