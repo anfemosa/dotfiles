@@ -104,7 +104,7 @@ fi
 # export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 
-eval "$(register-python-argcomplete3 pipx)"
+# eval "$(register-python-argcomplete3 pipx)"
 
 # *********************
 # User configuration
@@ -113,10 +113,10 @@ eval "$(register-python-argcomplete3 pipx)"
 # Include dotfiles
 [ -f $HOME/.homesick/repos/dotfiles/home/.init_shell ] && source $HOME/.homesick/repos/dotfiles/home/.init_shell
 
-exec zsh
-
 [[ -f "$HOME/.atuin/bin/env" ]] && . "$HOME/.atuin/bin/env"
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 if command -v atuin &>/dev/null; then
     eval "$(atuin init bash)"
 fi
+
+exec zsh
