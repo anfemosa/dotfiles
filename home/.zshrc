@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Start configuration added by Zim install {{{
 #
 # User configuration sourced by interactive shells
@@ -8,11 +15,23 @@
 # -----------------
 
 #
+# Cache
+#
+
+# Create a cache folder if it isn't exists
+ZSH_CACHE_DIR=${XDG_CACHE_HOME:-$HOME/.cache}/zsh
+[ ! -d $ZSH_CACHE_DIR ] && mkdir -p $ZSH_CACHE_DIR/completion
+
+# Define a custom file for compdump
+export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
+
+#
 # History
 #
 
 # Remove older command from the history if a duplicate is to be added.
 setopt HIST_IGNORE_ALL_DUPS
+
 
 #
 # Input/output
@@ -34,36 +53,6 @@ WORDCHARS=${WORDCHARS//[\/]}
 # Zim configuration
 # -----------------
 
-# Use degit instead of git as the default tool to install and update modules.
-#zstyle ':zim:zmodule' use 'degit'
-
-# --------------------
-# Module configuration
-# --------------------
-
-#
-# git
-#
-
-# Set a custom prefix for the generated aliases. The default prefix is 'G'.
-#zstyle ':zim:git' aliases-prefix 'g'
-
-#
-# input
-#
-
-# Append `../` to your input for each `.` you type after an initial `..`
-#zstyle ':zim:input' double-dot-expand yes
-
-#
-# termtitle
-#
-
-# Set a custom terminal title format using prompt expansion escape sequences.
-# See http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Simple-Prompt-Escapes
-# If none is provided, the default '%n@%m: %~' is used.
-#zstyle ':zim:termtitle' format '%1~'
-
 #
 # zsh-autosuggestions
 #
@@ -74,7 +63,8 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
 # Customize the style that the suggestions are shown with.
 # See https://github.com/zsh-users/zsh-autosuggestions/blob/master/README.md#suggestion-highlight-style
-#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
+# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
 
 #
 # zsh-syntax-highlighting
@@ -86,8 +76,8 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
 # Customize the main highlighter styles.
 # See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md#how-to-tweak-it
-#typeset -A ZSH_HIGHLIGHT_STYLES
-#ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
 
 # ------------------
 # Initialize modules
@@ -109,7 +99,7 @@ if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
   source ${ZIM_HOME}/zimfw.zsh init -q
 fi
 # Initialize modules.
-source ${ZIM_HOME}/init.zsh
+[ -f ${ZIM_HOME}/init.zsh ] && source ${ZIM_HOME}/init.zsh
 
 # ------------------------------
 # Post-init module configuration
@@ -128,41 +118,9 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# source ~/apps/antigen.zsh
-# antigen use oh-my-zsh
-
-# antigen theme romkatv/powerlevel10k
-
-# antigen bundle direnv
-# antigen bundle command-not-found
-# antigen bundle docker
-# antigen bundle git
-# antigen bundle globalias
-# antigen bundle last-working-dir
-# antigen bundle sudo
-# antigen bundle zsh-users/zsh-history-substring-search
-# antigen bundle zsh-users/zsh-syntax-highlighting
-# antigen bundle wfxr/forgit@main
-# antigen bundle paulirish/git-open
-# antigen bundle popstas/zsh-command-time
-# antigen bundle MichaelAquilina/zsh-auto-notify
-# antigen bundle MichaelAquilina/zsh-you-should-use
-# antigen bundle zsh-users/zsh-autosuggestions
-# antigen bundle atuinsh/atuin@main
-
-# antigen apply
-
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
-
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/apps:$PATH
+# *********************
+# Completion options
+# *********************
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
@@ -178,42 +136,14 @@ autoload -U bashcompinit && bashcompinit
 eval "$(register-python-argcomplete3 pipx)"
 
 # *********************
-# zsh cache compdump
-# *********************
-
-# Create a cache folder if it isn't exists
-if [ ! -d "$HOME/.cache/zsh" ]; then
-    mkdir -p $HOME/.cache/zsh
-fi
-
-# Define a custom file for compdump
-export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
-
-# *********************
-# command-line fuzzy finder
-# *********************
-# [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
-
-# if command -v fzf &> /dev/null
-# then
-#     source <(fzf --zsh)
-# fi
-
-# export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
-# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-# export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
-
-# *********************
 # User configuration
 # *********************
 
-export SHELL=/bin/zsh
+# If you come from bash you might have to change your $PATH.
+export PATH=$HOME/apps:$PATH
 
 # Include dotfiles
 [ -f $HOME/.homesick/repos/dotfiles/home/.init_shell ] && source $HOME/.homesick/repos/dotfiles/home/.init_shell
-
-# history options
-setopt hist_ignore_all_dups
 
 # Override globalalias config
 # space expands all aliases, including global
@@ -238,3 +168,5 @@ if command -v atuin &> /dev/null
 then
   eval "$(atuin init zsh)"
 fi
+
+(( ! ${+functions[p10k]} )) || p10k finalize
