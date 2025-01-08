@@ -37,6 +37,8 @@ setopt HIST_IGNORE_ALL_DUPS
 # Input/output
 #
 
+zstyle ':zim:input' double-dot-expand yes
+
 # Set editor default keymap to emacs (`-e`) or vi (`-v`)
 bindkey -e
 
