@@ -120,4 +120,4 @@ if command -v atuin &>/dev/null; then
 fi
 
 # Launch zsh if it is installed
-exec zsh
+# [ -x /usr/bin/zsh ] && exec zsh
