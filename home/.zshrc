@@ -19,7 +19,7 @@ antigen bundle last-working-dir
 antigen bundle sudo
 antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle 'wfxr/forgit'
+antigen bundle wfxr/forgit@main
 antigen bundle paulirish/git-open
 antigen bundle popstas/zsh-command-time
 antigen bundle MichaelAquilina/zsh-auto-notify
@@ -99,4 +99,4 @@ bindkey -M isearch " " magic-space
 [[ ! -f $HOME/.homesick/repos/dotfiles/home/.p10k.zsh ]] || source $HOME/.homesick/repos/dotfiles/home/.p10k.zsh
 
 # Created by `pipx` on 2024-12-19 16:39:58
-export PATH="$PATH:/home/TRI.LAN/110343/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
