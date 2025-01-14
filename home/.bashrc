@@ -90,20 +90,6 @@ if ! shopt -oq posix; then
     fi
 fi
 
-# *********************
-# command-line fuzzy finder
-# *********************
-# [ -f $HOME/.fzf.bash ] && source $HOME/.fzf.bash
-
-# if command -v fzf &> /dev/null
-# then
-#     source <(fzf --bash)
-# fi
-
-# export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
-# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-# export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
-
 eval "$(register-python-argcomplete3 pipx)"
 
 # *********************
@@ -116,7 +102,20 @@ eval "$(register-python-argcomplete3 pipx)"
 [[ -f "$HOME/.atuin/bin/env" ]] && . "$HOME/.atuin/bin/env"
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 if command -v atuin &>/dev/null; then
+    # *********************
+    # atuin
+    # *********************
     eval "$(atuin init bash)"
+elif command -v fzf &>/dev/null; then
+    # *********************
+    # command-line fuzzy finder
+    # *********************
+    # Use fzf to search history
+    source <(fzf --bash)
+
+    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 fi
 
 # Launch zsh if it is installed
