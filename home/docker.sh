@@ -1,5 +1,5 @@
 # Path for Docker files
-export dockerfiles_path=~/devenv/dockerfiles;
+export dockerfiles_path=~/devenv/dockerfiles
 
 # docker common commands
 # if command -v podman &> /dev/null
@@ -18,7 +18,7 @@ alias dimp="docker image prune"
 # Build a docker image
 # ToDo: SHELL and SHELL_PATH seem to be the same
 # ToDo: build a base image devenv:ROS_DISTRO and use it to build the workspace images
-function dockbuild(){
+function dockbuild() {
     local current_dir=$(pwd)
 
     # List of supported ROS distros
@@ -53,7 +53,7 @@ function dockbuild(){
     local image_name="devenv:${ros_distro}"
     local target="--target devenv"
 
-	cd $dockerfiles_path;
+    cd $dockerfiles_path
 
     local build_options="--build-arg ROS_DISTRO=${ros_distro}"
     local build_command="docker build"
@@ -61,71 +61,70 @@ function dockbuild(){
     while [[ $# -gt 1 ]]; do
         local key="$2"
         case $key in
-            --shell)
-                shell="$3"
-                case $shell in
-                    bash|zsh)
-                        ;;
-                    *)
-                        echo "${RED}SHELL: ${shell} not supported${NC}"
-
-                        # Exit with error
-                        cd $current_dir
-                        return 1
-                    ;;
-                esac
-                build_options="${build_options} --build-arg EXT_SHELL=${shell} --build-arg SHELL=${shell_path}"
-                shift
-                shift
-                ;;
-            --ws)
-                local ws_packages="${3}_${ros_distro}.txt"
-                build_options="${build_options} --build-arg PACKAGES=${ws_packages}"
-
-                # Check if the image base devenv exist
-                echo "${YELLOW}Checking if image $image_name exists${NC}"
-                if [[ "$(docker images -q $image_name 2> /dev/null)" == "" ]]; then
-                    echo "${RED}Image base $image_name does not exist. Building it...${NC}"
-                    echo "${YELLOW}Building image $image_name${NC}"
-                    build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
-                    echo "${YELLOW}${build_command}${NC}"
-                    $(echo "$build_command")
-                else
-                    echo "${GREEN}Image $image_name exists${NC}"
-                fi
-                echo "${YELLOW}Building workspace extended image${NC}"
-                image_name="${3}:${ros_distro}"
-                target="--target workspace-extended"
-                shift
-                shift
-                ;;
-            --force)
-                echo "${YELLOW}Force rebuild the image${NC}"
-                build_options="${build_options} --no-cache"
-                shift
-                ;;
-            --peak)
-                echo "${YELLOW}Installing PeakCAN driver${NC}"
-                build_options="${build_options} --build-arg PEAK_DRIVER=install"
-                shift
-                ;;
-            --open3d)
-                echo "${YELLOW}Installing Open3D driver${NC}"
-                build_options="${build_options} --build-arg OPEN3D=install"
-                shift
-                ;;
-            --conan)
-                echo "${YELLOW}Installing Conan compiler${NC}"
-                build_options="${build_options} --build-arg CONAN=install"
-                shift
-                ;;
+        --shell)
+            shell="$3"
+            case $shell in
+            bash | zsh) ;;
             *)
-                echo "${RED}build_args: ${key} not supported${NC}"
+                echo "${RED}SHELL: ${shell} not supported${NC}"
 
                 # Exit with error
                 cd $current_dir
                 return 1
                 ;;
+            esac
+            build_options="${build_options} --build-arg EXT_SHELL=${shell} --build-arg SHELL=${shell_path}"
+            shift
+            shift
+            ;;
+        --ws)
+            local ws_packages="${3}_${ros_distro}.txt"
+            build_options="${build_options} --build-arg PACKAGES=${ws_packages}"
+
+            # Check if the image base devenv exist
+            echo "${YELLOW}Checking if image $image_name exists${NC}"
+            if [[ "$(docker images -q $image_name 2>/dev/null)" == "" ]]; then
+                echo "${RED}Image base $image_name does not exist. Building it...${NC}"
+                echo "${YELLOW}Building image $image_name${NC}"
+                build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
+                echo "${YELLOW}${build_command}${NC}"
+                $(echo "$build_command")
+            else
+                echo "${GREEN}Image $image_name exists${NC}"
+            fi
+            echo "${YELLOW}Building workspace extended image${NC}"
+            image_name="${3}:${ros_distro}"
+            target="--target workspace-extended"
+            shift
+            shift
+            ;;
+        --force)
+            echo "${YELLOW}Force rebuild the image${NC}"
+            build_options="${build_options} --no-cache"
+            shift
+            ;;
+        --peak)
+            echo "${YELLOW}Installing PeakCAN driver${NC}"
+            build_options="${build_options} --build-arg PEAK_DRIVER=install"
+            shift
+            ;;
+        --open3d)
+            echo "${YELLOW}Installing Open3D driver${NC}"
+            build_options="${build_options} --build-arg OPEN3D=install"
+            shift
+            ;;
+        --conan)
+            echo "${YELLOW}Installing Conan compiler${NC}"
+            build_options="${build_options} --build-arg CONAN=install"
+            shift
+            ;;
+        *)
+            echo "${RED}build_args: ${key} not supported${NC}"
+
+            # Exit with error
+            cd $current_dir
+            return 1
+            ;;
         esac
     done
     # --format docker for podman
@@ -198,64 +197,64 @@ function dockrun() {
         local key="$2"
 
         case $key in
-            --image)
-                image="$3:${container_name}"
-                run_message="${run_message}\nImage: ${image}"
-                shift
-                shift
+        --image)
+            image="$3:${container_name}"
+            run_message="${run_message}\nImage: ${image}"
+            shift
+            shift
+            ;;
+        --ws)
+            local ws="$3"
+            workspace="${workspace_base}/${ws}"
+            run_message="${run_message}\nWorkspace: ${workspace}"
+            shift
+            shift
+            ;;
+        --shell)
+            docker_shell="$3"
+            run_message="${run_message}\nShell: ${docker_shell}"
+            shift
+            shift
+            ;;
+        --share)
+            local resource=$3
+            case $resource in
+            video)
+                resource_to_share="${resource_to_share} --volume /dev/video0:/dev/video0"
                 ;;
-            --ws)
-                local ws="$3"
-                workspace="${workspace_base}/${ws}"
-                run_message="${run_message}\nWorkspace: ${workspace}"
-                shift
-                shift
+            pcan)
+                resource_to_share="${resource_to_share} --volume /dev/pcanusb32:/dev/pcanusb32"
                 ;;
-            --shell)
-                docker_shell="$3"
-                run_message="${run_message}\nShell: ${docker_shell}"
-                shift
-                shift
-                ;;
-            --share)
-                local resource=$3
-                case $resource in
-                    video)
-                        resource_to_share="${resource_to_share} --volume /dev/video0:/dev/video0"
-                        ;;
-                    pcan)
-                        resource_to_share="${resource_to_share} --volume /dev/pcanusb32:/dev/pcanusb32"
-                        ;;
-                    dev)
-                        resource_to_share=" --volume /dev:/dev"
-                        ;;
-                    *)
-                        echo "${RED}Resource not supported: ${resource}${NC}"
-
-                        # Exit with error
-                        cd $current_dir
-                        return 1
-                        ;;
-                esac
-                run_message="${run_message}\nResource to share: ${resource_to_share}"
-                run_options="${run_options} ${resource_to_share}"
-                shift
-                shift
-                ;;
-            --parse)
-                parse_args=" $3"
-                run_message="${run_message}\nParse args: ${parse_args}"
-                run_options="${run_options} ${parse_args}"
-                shift
-                shift
+            dev)
+                resource_to_share=" --volume /dev:/dev"
                 ;;
             *)
-                echo "${RED}build_args: ${key} not supported${NC}"
+                echo "${RED}Resource not supported: ${resource}${NC}"
 
                 # Exit with error
                 cd $current_dir
                 return 1
                 ;;
+            esac
+            run_message="${run_message}\nResource to share: ${resource_to_share}"
+            run_options="${run_options} ${resource_to_share}"
+            shift
+            shift
+            ;;
+        --parse)
+            parse_args=" $3"
+            run_message="${run_message}\nParse args: ${parse_args}"
+            run_options="${run_options} ${parse_args}"
+            shift
+            shift
+            ;;
+        *)
+            echo "${RED}build_args: ${key} not supported${NC}"
+
+            # Exit with error
+            cd $current_dir
+            return 1
+            ;;
         esac
     done
 
@@ -264,7 +263,7 @@ function dockrun() {
     echo "${BLUE}${run_message}${NC}"
 
     # Check if the image exist
-    if [[ "$(docker images -q $image 2> /dev/null)" == "" ]]; then
+    if [[ "$(docker images -q $image 2>/dev/null)" == "" ]]; then
         # build the image
         echo "${RED}Docker image for ${image} does not exist. Building it...${NC}"
 
@@ -317,30 +316,30 @@ function dockexec() {
     fi
 
     local container_name="$1"
-    local workspace="${HOME}"
+    local workspace=""
     local docker_shell=${ext}
 
     while [[ $# -gt 1 ]]; do
         local key="$2"
 
         case $key in
-            --ws)
-                workspace="$3"
-                shift
-                shift
-                ;;
-            --shell)
-                docker_shell="$3"
-                shift
-                shift
-                ;;
-            *)
-                echo "${RED}Unknown option: $2${NC}"
+        --ws)
+            workspace="$3"
+            shift
+            shift
+            ;;
+        --shell)
+            docker_shell="$3"
+            shift
+            shift
+            ;;
+        *)
+            echo "${RED}Unknown option: $2${NC}"
 
-                # Exit with error
-                cd $current_dir
-                return 1
-                ;;
+            # Exit with error
+            cd $current_dir
+            return 1
+            ;;
         esac
     done
 
@@ -370,19 +369,18 @@ function dockexec() {
 
 # Remove all stoped containers
 function drma() {
-	drm $(docker ps -a -f status=exited -q)
+    drm $(docker ps -a -f status=exited -q)
 }
 
-
 # Remove all unused or dangling immages
-function drmui(){
-	drmi $(dim --filter "dangling=true" -q --no-trunc)
+function drmui() {
+    drmi $(dim --filter "dangling=true" -q --no-trunc)
 }
 
 # Stop and remove
 function dsr() {
-	docker stop $1;
-	docker rm $1
+    docker stop $1
+    docker rm $1
 }
 
 function cleancode() {
