@@ -143,6 +143,8 @@ eval "$(register-python-argcomplete3 pipx)"
 # User configuration
 # *********************
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/apps:$PATH
 
@@ -163,9 +165,6 @@ bindkey -M isearch " " magic-space
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.homesick/repos/dotfiles/home/.p10k.zsh ]] || source $HOME/.homesick/repos/dotfiles/home/.p10k.zsh
-
-# Created by `pipx` on 2024-12-19 16:39:58
-export PATH="$PATH:$HOME/.local/bin"
 
 [ -f  "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
 if command -v atuin &> /dev/null
