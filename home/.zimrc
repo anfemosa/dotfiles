@@ -48,7 +48,6 @@ zmodule MichaelAquilina/zsh-you-should-use
 
 zmodule atuinsh/atuin
 
-
 #
 # Prompt
 #
@@ -58,7 +57,9 @@ zmodule duration-info
 # Exposes git repository status information to prompts, used by asciiship.
 zmodule git-info
 # A heavily reduced, ASCII-only version of the Spaceship and Starship prompts.
-zmodule asciiship
+# zmodule asciiship
+# Puglin to show th current hooks in the prompt
+zmodule agkozak/zhooks
 
 #
 # Completion
@@ -86,4 +87,3 @@ zmodule zsh-users/zsh-autosuggestions
 zmodule ohmyzsh/ohmyzsh --root plugins/docker
 zmodule ohmyzsh/ohmyzsh --root plugins/git
 # }}} End configuration added by Zim install
-

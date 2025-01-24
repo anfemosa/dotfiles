@@ -106,7 +106,11 @@ if command -v atuin &>/dev/null; then
     # atuin
     # *********************
     eval "$(atuin init bash)"
-elif command -v fzf &>/dev/null; then
+fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+if command -v fzf &>/dev/null; then
     # *********************
     # command-line fuzzy finder
     # *********************
