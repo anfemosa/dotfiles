@@ -102,8 +102,25 @@ fi
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
   source ${ZIM_HOME}/zimfw.zsh init -q
 fi
+
+# *********************
+# Completion options
+# *********************
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
+
+[ -f /usr/share/vcstool-completion/vcs.zsh ] &&  source /usr/share/vcstool-completion/vcs.zsh
+
+fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
+fpath=($HOME/.zfunc $fpath)
+
 # Initialize modules.
 [ -f ${ZIM_HOME}/init.zsh ] && source ${ZIM_HOME}/init.zsh
+
+# To solve complete command not found issue
+autoload -U bashcompinit && bashcompinit
+eval "$(register-python-argcomplete3 pipx)"
 
 # ------------------------------
 # Post-init module configuration
@@ -121,23 +138,6 @@ for key ('k') bindkey -M vicmd ${key} history-substring-search-up
 for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
-
-# *********************
-# Completion options
-# *********************
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-COMPLETION_WAITING_DOTS="true"
-
-[ -f /usr/share/vcstool-completion/vcs.zsh ] &&  source /usr/share/vcstool-completion/vcs.zsh
-
-fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
-fpath=($HOME/.zfunc $fpath)
-
-# To solve complete command not found issue
-autoload -U bashcompinit && bashcompinit
-
-eval "$(register-python-argcomplete3 pipx)"
 
 # *********************
 # User configuration
