@@ -107,9 +107,6 @@ fi
 # Completion options
 # *********************
 
-# Uncomment the following line to display red dots whilst waiting for completion.
-COMPLETION_WAITING_DOTS="true"
-
 [ -f /usr/share/vcstool-completion/vcs.zsh ] &&  source /usr/share/vcstool-completion/vcs.zsh
 
 fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
