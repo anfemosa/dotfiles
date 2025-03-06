@@ -21,7 +21,7 @@ if [[ "${ROS_VERSION}" -eq 2 ]]; then
 fi
 
 # Source rosmon
-function sc_rosmon(){
+function sc_rosmon() {
     if [[ "${ROS_VERSION}" -eq 1 ]]; then
         if [[ -f "/opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}" ]]; then
             source /opt/ros/${ROS_DISTRO}/etc/catkin/profile.d/50-rosmon.${ext}
@@ -30,18 +30,17 @@ function sc_rosmon(){
 }
 
 # cd to the root of the workspace
-function roshome(){
+function roshome() {
     cd ${ROS_HOME}
 }
 
 # Source the current workspace
-function sc_ws(){
+function sc_ws() {
     local current_dir="$PWD"
     local workspace_dir=""
     local config_file=""
 
-    if [[ "${ROS_VERSION}" -eq 1 ]]
-    then
+    if [[ "${ROS_VERSION}" -eq 1 ]]; then
         config_file=devel/setup.${ext}
     else
         config_file=install/setup.${ext}
@@ -55,6 +54,7 @@ function sc_ws(){
             echo "${GREEN}Sourcing workspace: $current_dir/$config_file${NC}"
             source "$current_dir/$config_file" && sc_rosmon
             export ROS_HOME=$workspace_dir
+            clear
             break
         fi
         # Subimos un nivel de directorio
@@ -69,11 +69,10 @@ function sc_ws(){
 alias sc=sc_ws
 
 # Source the ros base installation
-function sc_ros(){
+function sc_ros() {
     source /opt/ros/${ROS_DISTRO}/setup.${ext}
     # In ROS 1 source rosmon
-    if [[ "${ROS_VERSION}" -eq 1 ]]
-    then
+    if [[ "${ROS_VERSION}" -eq 1 ]]; then
         sc_rosmon
     fi
 }
@@ -83,8 +82,7 @@ function cb() {
     local pwd_cb=$(pwd)
     roshome
 
-    if [[ "${ROS_VERSION}" -eq 1 ]]
-    then
+    if [[ "${ROS_VERSION}" -eq 1 ]]; then
         catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release -- "$@"
     else
         colcon build --parallel-workers 6 "$@"
@@ -95,10 +93,9 @@ function cb() {
 }
 
 # Clean the workspace by deleting the generated folders (build, log, devel/install).
-function clean_ws(){
+function clean_ws() {
     local pwd_cb=$(pwd)
-    if [[ "${ROS_VERSION}" -eq 1 ]]
-    then
+    if [[ "${ROS_VERSION}" -eq 1 ]]; then
         roshome && rm -rf build devel install
     else
         roshome && rm -rf build log install
@@ -107,20 +104,19 @@ function clean_ws(){
 }
 
 # Clean workspace (delete the generated folders) then build ws
-function cbclean(){
+function cbclean() {
     clean_ws && cb "$@"
 }
 
 # Initialize catkin workspace, configure and build it
-function cib(){
-    if [[ "${ROS_VERSION}" -eq 1 ]]
-    then
+function cib() {
+    if [[ "${ROS_VERSION}" -eq 1 ]]; then
         catkin init && catkin config --extend /opt/ros/${ROS_DISTRO} && catkin build --summarize --cmake-args -DCMAKE_BUILD_TYPE=Release
     fi
 }
 
 # Run ci locally
-function runci(){
+function runci() {
     # check if exist .rosinstall file
     if [ -f ./.rosinstall ]; then
         echo ".rosinstall in package"
@@ -134,8 +130,7 @@ function runci(){
 # Check if ROS_DISTRO is set.
 if [[ -z "${ROS_DISTRO}" ]]; then
     local ROS_DIR=/opt/ros
-    if [ -d "${ROS_DIR}" ];
-    then
+    if [ -d "${ROS_DIR}" ]; then
         export ROS_DISTRO=$(basename $(find /opt/ros/* -maxdepth 0 -type d | head -1))
         #echo "ROS_DISTRO set to ${ROS_DISTRO}"
     else
