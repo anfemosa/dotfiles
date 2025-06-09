@@ -108,6 +108,11 @@ function dockbuild() {
             build_options="${build_options} --build-arg PEAK_DRIVER=install"
             shift
             ;;
+        --azure)
+            echo "${YELLOW}Installing Azure driver${NC}"
+            build_options="${build_options} --build-arg AZURE=install"
+            shift
+            ;;
         --open3d)
             echo "${YELLOW}Installing Open3D driver${NC}"
             build_options="${build_options} --build-arg OPEN3D=install"
