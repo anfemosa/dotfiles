@@ -118,6 +118,11 @@ fpath=($HOME/.zfunc $fpath)
 # To solve complete command not found issue
 autoload -U bashcompinit && bashcompinit
 eval "$(register-python-argcomplete3 pipx)"
+# Enable argcomplete for ROS 2 and colcon
+if (( ${+commands[register-python-argcomplete3]} )); then
+  eval "$(register-python-argcomplete3 ros2)"
+  eval "$(register-python-argcomplete3 colcon)"
+fi
 
 # ------------------------------
 # Post-init module configuration

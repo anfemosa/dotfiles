@@ -91,6 +91,11 @@ if ! shopt -oq posix; then
 fi
 
 eval "$(register-python-argcomplete3 pipx)"
+# Enable argcomplete for ROS 2 and colcon
+if command -v register-python-argcomplete3 &>/dev/null; then
+    eval "$(register-python-argcomplete3 ros2)"
+    eval "$(register-python-argcomplete3 colcon)"
+fi
 
 # *********************
 # User configuration
