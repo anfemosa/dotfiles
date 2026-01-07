@@ -1,22 +1,25 @@
 # .zsh_plugins.txt
-sindresorhus/pure   # enhance your prompt
-wfxr/forgit@main
+romkatv/powerlevel10k
+
+wfxr/forgit
 paulirish/git-open
 popstas/zsh-command-time
 MichaelAquilina/zsh-auto-notify
 MichaelAquilina/zsh-you-should-use
 
-# you can even use Oh My Zsh plugins
+# Use Oh My Zsh plugins
 getantidote/use-omz
 ohmyzsh/ohmyzsh path:lib
 ohmyzsh/ohmyzsh path:plugins/extract
-ohmyzsh/ohmyzsh path:direnv
-ohmyzsh/ohmyzsh path:command-not-found
-ohmyzsh/ohmyzsh path:docker
-ohmyzsh/ohmyzsh path:git
-ohmyzsh/ohmyzsh path:globalias
-ohmyzsh/ohmyzsh path:last-working-dir
-ohmyzsh/ohmyzsh path:sudo
+
+# From antigen previus configuration
+ohmyzsh/ohmyzsh path:plugins/command-not-found
+ohmyzsh/ohmyzsh path:plugins/direnv
+ohmyzsh/ohmyzsh path:plugins/docker
+ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/globalias
+ohmyzsh/ohmyzsh path:plugins/last-working-dir
+ohmyzsh/ohmyzsh path:plugins/sudo
 
 # add fish-like features
 zsh-users/zsh-syntax-highlighting

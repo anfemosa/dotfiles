@@ -5,28 +5,38 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-source ~/apps/antigen.zsh
-antigen use oh-my-zsh
+# source ~/apps/antigen.zsh
+# antigen use oh-my-zsh
 
-antigen theme romkatv/powerlevel10k
+# antigen theme romkatv/powerlevel10k
 
-antigen bundle direnv
-antigen bundle command-not-found
-antigen bundle docker
-antigen bundle git
-antigen bundle globalias
-antigen bundle last-working-dir
-antigen bundle sudo
-antigen bundle zsh-users/zsh-history-substring-search
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle wfxr/forgit@main
-antigen bundle paulirish/git-open
-antigen bundle popstas/zsh-command-time
-antigen bundle MichaelAquilina/zsh-auto-notify
-antigen bundle MichaelAquilina/zsh-you-should-use
-antigen bundle zsh-users/zsh-autosuggestions
+# antigen bundle direnv
+# antigen bundle command-not-found
+# antigen bundle docker
+# antigen bundle git
+# antigen bundle globalias
+# antigen bundle last-working-dir
+# antigen bundle sudo
+# antigen bundle zsh-users/zsh-history-substring-search
+# antigen bundle zsh-users/zsh-syntax-highlighting
+# antigen bundle wfxr/forgit@main
+# antigen bundle paulirish/git-open
+# antigen bundle popstas/zsh-command-time
+# antigen bundle MichaelAquilina/zsh-auto-notify
+# antigen bundle MichaelAquilina/zsh-you-should-use
+# antigen bundle zsh-users/zsh-autosuggestions
 
-antigen apply
+# antigen apply
+
+# Clone antidote if necessary.
+[[ -e ${ZDOTDIR:-$HOME}/.antidote ]] ||
+  git clone https://github.com/mattmc3/antidote.git ${ZDOTDIR:-$HOME}/.antidote
+
+# Source antidote.
+source ${ZDOTDIR:-$HOME}/.antidote/antidote.zsh
+
+# Load plugins definided at ~/.zsh_plugins.txt
+antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
 
