@@ -87,7 +87,7 @@ function dockbuild(){
                 if [[ "$(docker images -q $image_name 2> /dev/null)" == "" ]]; then
                     echo "${RED}Image base $image_name does not exist. Building it...${NC}"
                     echo "${YELLOW}Building image $image_name${NC}"
-                    build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
+                    build_command="docker build --allow network.host -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
                     echo "${YELLOW}${build_command}${NC}"
                     $(echo "$build_command")
                 else
@@ -129,7 +129,7 @@ function dockbuild(){
         esac
     done
     # --format docker for podman
-    build_command="docker build -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
+    build_command="docker build --allow network.host -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
     echo "${YELLOW}${build_command}${NC}"
     $(echo "$build_command")
 
