@@ -30,3 +30,4 @@ fi
 # Dotfiles
 alias dot='homeshick cd dotfiles && code . && cd -'
 alias dev='cd ${HOME}/devenv && code . && cd -'
+alias notes='cd ${HOME}/ws_files && code . && cd -'

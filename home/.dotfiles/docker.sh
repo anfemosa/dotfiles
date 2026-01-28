@@ -288,7 +288,8 @@ function dockrun() {
     else
         echo "${GREEN}Container ${container_name} not running. Launching...${NC}"
         # Launch container
-        local rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --x11 --network host ${run_options} --name ${container_name} ${image} ${docker_shell}"
+        # local rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --x11 --network host ${run_options} --name ${container_name} ${image} ${docker_shell}"
+        local rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --network host --x11 ${run_options} --name ${container_name} ${image} ${docker_shell}"
         echo "${YELLOW}${rocker_command}${NC}"
         $(echo "$rocker_command")
     fi

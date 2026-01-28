@@ -99,6 +99,9 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 
+# Set up fzf key bindings and fuzzy completion
+eval "$(fzf --bash)"
+
 if command -v pipx &> /dev/null
 then
     eval "$(register-python-argcomplete3 pipx)"
