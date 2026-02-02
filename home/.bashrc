@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -69,7 +70,11 @@ esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    if test -r ~/.dircolors; then
+        eval "$(dircolors -b ~/.dircolors)"
+    else
+        eval "$(dircolors -b)"
+    fi
     alias ls='ls --color=auto'
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
@@ -84,8 +89,10 @@ fi
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
+        # shellcheck disable=SC1091
         . /usr/share/bash-completion/bash_completion
     elif [ -f /etc/bash_completion ]; then
+        # shellcheck disable=SC1091
         . /etc/bash_completion
     fi
 fi
@@ -93,7 +100,8 @@ fi
 # *********************
 # command-line fuzzy finder
 # *********************
-[ -f $HOME/.fzf.bash ] && source $HOME/.fzf.bash
+# shellcheck disable=SC1091
+[ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -112,6 +120,7 @@ fi
 # *********************
 
 # Include dotfiles
-[ -f $HOME/.homesick/repos/dotfiles/home/.init_shell ] && source $HOME/.homesick/repos/dotfiles/home/.init_shell
+# shellcheck disable=SC1091
+[ -f "$HOME/.homesick/repos/dotfiles/home/.init_shell" ] && source "$HOME/.homesick/repos/dotfiles/home/.init_shell"
 
 # exec zsh
