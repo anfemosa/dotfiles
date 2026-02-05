@@ -63,8 +63,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 
 # Set up fzf key bindings and fuzzy completion
-# shellcheck source=/dev/null
-source <(fzf --zsh)
+command -v fzf &> /dev/null && eval "$(fzf --zsh)"
 
 # *********************
 # User configuration
@@ -102,4 +101,3 @@ export PATH=/home/pipe/.opencode/bin:$PATH
 cursor() {
   (nohup /home/pipe/apps/Cursor-2.4.23-x86_64.AppImage --no-sandbox -g "$@" >/dev/null 2>&1 &)
 }
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
