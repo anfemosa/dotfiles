@@ -124,3 +124,5 @@ fi
 [ -f "$HOME/.homesick/repos/dotfiles/home/.init_shell" ] && source "$HOME/.homesick/repos/dotfiles/home/.init_shell"
 
 # exec zsh
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

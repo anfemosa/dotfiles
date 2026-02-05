@@ -102,3 +102,4 @@ export PATH=/home/pipe/.opencode/bin:$PATH
 cursor() {
   (nohup /home/pipe/apps/Cursor-2.4.23-x86_64.AppImage --no-sandbox -g "$@" >/dev/null 2>&1 &)
 }
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
