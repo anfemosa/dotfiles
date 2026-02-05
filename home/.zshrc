@@ -35,7 +35,7 @@ fpath=("$HOME/.zfunc" "${fpath[@]}")
 autoload -Uz compinit && compinit
 autoload -U bashcompinit && bashcompinit
 
-command -v pipx &> /dev/null &&  eval "$(register-python-argcomplete3 pipx)"
+command -v pipx &> /dev/null &&  eval "$(register-python-argcomplete pipx)"
 
 # *********************
 # zsh cache compdump
