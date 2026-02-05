@@ -110,10 +110,7 @@ export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 # Set up fzf key bindings and fuzzy completion
 command -v fzf &> /dev/null && eval "$(fzf --bash)"
 
-if command -v pipx &> /dev/null
-then
-    eval "$(register-python-argcomplete3 pipx)"
-fi
+command -v pipx &> /dev/null &&  eval "$(register-python-argcomplete3 pipx)"
 
 # *********************
 # User configuration
