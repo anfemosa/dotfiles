@@ -79,7 +79,7 @@ if command -v lsd &> /dev/null; then
     info "lsd already installed"
 else
     echo -e "\nInstalling lsd from GitHub..."
-    ARCH=$(dpkg --print-architecture)
+    ARCH=$(uname -m)
     LSD_VERSION=$(curl -s https://api.github.com/repos/lsd-rs/lsd/releases/latest | grep '"tag_name"' | sed 's/.*"v\(.*\)".*/\1/')
 
     if [ -z "$LSD_VERSION" ]; then
@@ -87,15 +87,18 @@ else
         exit 1
     fi
 
-    LSD_DEB="lsd-musl_${LSD_VERSION}_${ARCH}.deb"
-    LSD_URL="https://github.com/lsd-rs/lsd/releases/download/v${LSD_VERSION}/${LSD_DEB}"
+    LSD_TAR="lsd-v${LSD_VERSION}-${ARCH}-unknown-linux-musl.tar.gz"
+    LSD_URL="https://github.com/lsd-rs/lsd/releases/download/v${LSD_VERSION}/${LSD_TAR}"
 
     TMP_DIR=$(mktemp -d)
     trap 'rm -rf "$TMP_DIR"' EXIT
 
-    if curl -sL -o "${TMP_DIR}/${LSD_DEB}" "$LSD_URL"; then
-        sudo dpkg -i "${TMP_DIR}/${LSD_DEB}"
-        info "lsd ${LSD_VERSION} installed"
+    if curl -sL -o "${TMP_DIR}/${LSD_TAR}" "$LSD_URL"; then
+        tar -xzf "${TMP_DIR}/${LSD_TAR}" -C "${TMP_DIR}"
+        mkdir -p "$HOME/.local/bin"
+        cp "${TMP_DIR}/lsd-v${LSD_VERSION}-${ARCH}-unknown-linux-musl/lsd" "$HOME/.local/bin/lsd"
+        chmod +x "$HOME/.local/bin/lsd"
+        info "lsd ${LSD_VERSION} installed to ~/.local/bin/lsd"
     else
         error "Failed to download lsd from $LSD_URL"
         rm -rf "$TMP_DIR"
