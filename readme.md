@@ -15,6 +15,9 @@ $HOME/.homesick/repos/homeshick/bin/homeshick clone anfemosa/dotfiles
 
 # reproduce the tracked links
 $HOME/.homesick/repos/homeshick/bin/homeshick link dotfiles
+
+# install core dependencies
+bash ~/.dotfiles/install.sh
 ```
 
 ## Usage
@@ -33,7 +36,21 @@ git commit -m "Added .bashrc file"
 git push origin master
 ```
 
-## Others packages
+## Core dependencies
+
+Auto-installed by `bash ~/.dotfiles/install.sh`:
+
+| Tool | Description |
+|------|-------------|
+| [ripgrep](https://github.com/BurntSushi/ripgrep) | Line-oriented search tool |
+| [fd-find](https://github.com/sharkdp/fd) | Simple, fast alternative to find |
+| [fzf](https://github.com/junegunn/fzf) | Command-line fuzzy finder |
+| [bat](https://github.com/sharkdp/bat) | A cat clone with syntax highlighting |
+| [lsd](https://github.com/lsd-rs/lsd) | Next-gen ls command |
+| [trash-cli](https://github.com/andreafrancia/trash-cli) | Command line trashcan interface |
+| [direnv](https://github.com/direnv/direnv) | Per-directory environment variables |
+
+## Optional packages
 
 Some useful applications:
 
@@ -45,9 +62,6 @@ Some useful applications:
 - meld - Graphical tool to diff and merge files. --> ***sudo apt install meld***
 - recoll - Personal full text search package. --> ***sudo apt install recoll***
 - neovim - Heavily refactored vim fork. --> ***sudo apt install neovim***
-- ripgrep - Line-oriented search tool that recursively searches the current. --> ***sudo apt install ripgrep***
-- trash-cli - Command Line Interface to FreeDesktop.org Trash. --> ***sudo apt install trash-cli***
-- [trash-cli](https://github.com/andreafrancia/trash-cli)
 
 ### Download from the website
 
@@ -62,7 +76,6 @@ Some useful applications:
 - [VLC]
 - [XPad]
 
-- [fd](https://github.com/sharkdp/fd): simple, fast and user-friendly alternative to find
 - [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher): makes your Linux desktop AppImage ready -->
 
 ``` bash
@@ -71,11 +84,8 @@ sudo apt update
 sudo apt install appimagelauncher
 ```
 
-- [checkingplaneitor](https://git.code.tecnalia.com:unai.antero/checkingplaneitor)
 - [qpdf](https://github.com/qpdf/qpdf): command-line tool and C++ library that performs content-preserving transformations on PDF files
 - [pdfmixtool](https://gitlab.com:scarpetta/pdfmixtool) v1.0.2 functional in Ubuntu 20.04
-- [bat](https://github.com/sharkdp/bat.git)
-- [lsd](https://github.com/Peltoche/lsd.git)
 - [iscan-bundle](https://support.epson.net/linux/en/iscan_c.php?version=2.30.4)
 - [Mendeley](https://www.mendeley.com/download-reference-manager/linux): AppImage
 
