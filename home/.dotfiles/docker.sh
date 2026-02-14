@@ -87,9 +87,8 @@ function dockbuild(){
                 if [[ "$(docker images -q $image_name 2> /dev/null)" == "" ]]; then
                     echo "${RED}Image base $image_name does not exist. Building it...${NC}"
                     echo "${YELLOW}Building image $image_name${NC}"
-                    build_command="docker build --allow network.host -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
-                    echo "${YELLOW}${build_command}${NC}"
-                    $(echo "$build_command")
+                    echo "${YELLOW}docker build --allow network.host -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile .${NC}"
+                    docker build --allow network.host -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile .
                 else
                     echo "${GREEN}Image $image_name exists${NC}"
                 fi
@@ -129,9 +128,8 @@ function dockbuild(){
         esac
     done
     # --format docker for podman
-    build_command="docker build --allow network.host -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile ."
-    echo "${YELLOW}${build_command}${NC}"
-    $(echo "$build_command")
+    echo "${YELLOW}docker build --allow network.host -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile .${NC}"
+    docker build --allow network.host -t ${image_name} ${build_options} ${target} -f devenv.Dockerfile .
 
     # Exit with success
     echo "${GREEN}Docker image for ${container_name} successfully built${NC}"
@@ -288,10 +286,8 @@ function dockrun() {
     else
         echo "${GREEN}Container ${container_name} not running. Launching...${NC}"
         # Launch container
-        # local rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --x11 --network host ${run_options} --name ${container_name} ${image} ${docker_shell}"
-        local rocker_command="rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --network host --x11 ${run_options} --name ${container_name} ${image} ${docker_shell}"
-        echo "${YELLOW}${rocker_command}${NC}"
-        $(echo "$rocker_command")
+        echo "${YELLOW}rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --network host --x11 ${run_options} --name ${container_name} ${image} ${docker_shell}${NC}"
+        rocker --home --ssh --git --user --user-preserve-groups --privileged --nvidia --network host --x11 ${run_options} --name ${container_name} ${image} ${docker_shell}
     fi
 
     # Exit with success
@@ -404,7 +400,3 @@ function cleancode() {
         echo "${BLUE}Removed code CachedData${NC}"
     fi
 }
-
-# function runpythonsyntax(){
-# 	rocker --home --name python_syntax tecnalia-docker-dev.artifact.tecnalia.com/docker:git
-# }
