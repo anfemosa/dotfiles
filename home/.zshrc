@@ -54,10 +54,6 @@ export COMPLETION_WAITING_DOTS="true"
 # *********************
 [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
 
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
-
 # Set up fzf key bindings and fuzzy completion
 # command -v fzf &> /dev/null && eval "$(fzf --zsh)"
 
@@ -90,10 +86,3 @@ bindkey -M isearch " " magic-space
 
 # Created by `pipx` on 2024-12-19 16:39:58
 export PATH="$PATH:$HOME/.local/bin"
-
-# opencode
-export PATH=/home/pipe/.opencode/bin:$PATH
-
-cursor() {
-  (nohup /home/pipe/apps/Cursor-2.4.23-x86_64.AppImage --no-sandbox -g "$@" >/dev/null 2>&1 &)
-}

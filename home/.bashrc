@@ -103,10 +103,6 @@ fi
 # shellcheck disable=SC1091
 [ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
 
-export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
-
 # Set up fzf key bindings and fuzzy completion
 command -v fzf &> /dev/null && eval "$(fzf --bash)"
 

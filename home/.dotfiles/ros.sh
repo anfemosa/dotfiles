@@ -121,13 +121,14 @@ function cib(){
 
 # Run ci locally
 function runci(){
+    local registry="${DOCKER_REGISTRY:?Set DOCKER_REGISTRY in ~/.shs/sensitive.sh}"
     # check if exist .rosinstall file
     if [ -f ./.rosinstall ]; then
         echo ".rosinstall in package"
-        find ../ -name run_ci -exec bash {} ROS_DISTRO="$@" DOCKER_IMAGE=tecnalia-robotics-docker.artifact.tecnalia.com/flexbotics-base-devel:"$@" UPSTREAM_WORKSPACE=.rosinstall \;
+        find ../ -name run_ci -exec bash {} ROS_DISTRO="$@" DOCKER_IMAGE=${registry}/flexbotics-base-devel:"$@" UPSTREAM_WORKSPACE=.rosinstall \;
     else
         echo "No .rosinstall in package"
-        find ../ -name run_ci -exec bash {} ROS_DISTRO="$@" DOCKER_IMAGE=tecnalia-robotics-docker.artifact.tecnalia.com/flexbotics-base-devel:"$@" \;
+        find ../ -name run_ci -exec bash {} ROS_DISTRO="$@" DOCKER_IMAGE=${registry}/flexbotics-base-devel:"$@" \;
     fi
 }
 

@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Define color codes
 export BLACK='\e[0;30m'
 export GRAY='\e[1;30m'
@@ -17,18 +18,21 @@ export LIGHT_GRAY='\e[0;37m'
 export WHITE='\e[1;37m'
 export NC='\e[0m' # No Color
 
-alias echo='echo -e'
+# Bash-only configuration
+if [ -n "$BASH_VERSION" ]; then
+    alias echo='echo -e'
 
-# Eternal bash history.
-# ---------------------
-# Undocumented feature which sets the size to "unlimited".
-# http://stackoverflow.com/questions/9457233/unlimited-bash-history
+    # Eternal bash history.
+    # ---------------------
+    # Undocumented feature which sets the size to "unlimited".
+    # http://stackoverflow.com/questions/9457233/unlimited-bash-history
 
-export HISTSIZE=1000000
-export HISTFILESIZE=1000000
-export HISTFILE=~/.bash_eternal_history
+    export HISTSIZE=1000000
+    export HISTFILESIZE=1000000
+    export HISTFILE=~/.bash_eternal_history
 
-export PROMPT_COMMAND='LAST_COMMAND_EXIT=$? && history -a && test 127 -eq $LAST_COMMAND_EXIT && head -n -2 $HISTFILE >${HISTFILE}_temp && mv ${HISTFILE}_temp $HISTFILE'
+    export PROMPT_COMMAND='LAST_COMMAND_EXIT=$? && history -a && test 127 -eq $LAST_COMMAND_EXIT && head -n -2 $HISTFILE >${HISTFILE}_temp && mv ${HISTFILE}_temp $HISTFILE'
+fi
 
 # Source homeshick
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
@@ -61,6 +65,11 @@ fi
 
 # Source cargo for rust
 [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
+
+# FZF configuration
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 
 # Refresh homeshick
 $HOME/.homesick/repos/homeshick/bin/homeshick --quiet refresh 2
