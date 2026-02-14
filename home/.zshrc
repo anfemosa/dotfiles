@@ -16,16 +16,17 @@ fi
 # Source antidote.
 source "${ZDOTDIR:-$HOME}/.antidote/antidote.zsh"
 
-# Load plugins definided at ~/.zsh_plugins.txt
-antidote load "${ZDOTDIR:-$HOME}/.zsh_plugins.txt"
+# *********************
+# Completion setup (must be before antidote load)
+# *********************
 
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
+# Create a cache folder if it isn't exists
+if [ ! -d "$HOME/.cache/zsh" ]; then
+    mkdir -p "$HOME/.cache/zsh"
+fi
 
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/apps:$PATH
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-export COMPLETION_WAITING_DOTS="true"
+# Define a custom file for compdump
+export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
 
 [ -f /usr/share/vcstool-completion/vcs.zsh ] &&  source /usr/share/vcstool-completion/vcs.zsh
 
@@ -37,17 +38,16 @@ autoload -U bashcompinit && bashcompinit
 
 command -v pipx &> /dev/null &&  eval "$(register-python-argcomplete pipx)"
 
-# *********************
-# zsh cache compdump
-# *********************
+# Load plugins definided at ~/.zsh_plugins.txt
+antidote load "${ZDOTDIR:-$HOME}/.zsh_plugins.txt"
 
-# Create a cache folder if it isn't exists
-if [ ! -d "$HOME/.cache/zsh" ]; then
-    mkdir -p "$HOME/.cache/zsh"
-fi
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=0'
 
-# Define a custom file for compdump
-export ZSH_COMPDUMP="$HOME/.cache/zsh/zcompdump-$HOST-$ZSH_VERSION"
+# If you come from bash you might have to change your $PATH.
+export PATH=$HOME/apps:$PATH
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+export COMPLETION_WAITING_DOTS="true"
 
 # *********************
 # command-line fuzzy finder
