@@ -22,7 +22,7 @@ fi
 
 # --- apt packages ---
 
-APT_PACKAGES=(ripgrep fd-find fzf bat trash-cli direnv)
+APT_PACKAGES=(ripgrep fd-find bat trash-cli direnv)
 TO_INSTALL=()
 
 for pkg in "${APT_PACKAGES[@]}"; do
@@ -40,6 +40,21 @@ if [ ${#TO_INSTALL[@]} -gt 0 ]; then
     info "apt packages installed"
 else
     info "All apt packages already installed"
+fi
+
+# --- fzf (from GitHub) ---
+
+if [ -d "$HOME/.fzf" ] && command -v fzf &> /dev/null; then
+    info "fzf already installed"
+else
+    echo -e "\nInstalling fzf from GitHub..."
+    if [ -d "$HOME/.fzf" ]; then
+        warn "$HOME/.fzf directory exists but fzf command not found, reinstalling..."
+        rm -rf "$HOME/.fzf"
+    fi
+    git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+    "$HOME/.fzf/install" --key-bindings --completion --no-update-rc
+    info "fzf installed from GitHub"
 fi
 
 # --- Debian name variants: create symlinks if needed ---
