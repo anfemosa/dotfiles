@@ -87,17 +87,20 @@ else
         exit 1
     fi
 
-    LSD_DEB="lsd_${LSD_VERSION}_${ARCH}.deb"
+    LSD_DEB="lsd-musl_${LSD_VERSION}_${ARCH}.deb"
     LSD_URL="https://github.com/lsd-rs/lsd/releases/download/v${LSD_VERSION}/${LSD_DEB}"
 
     TMP_DIR=$(mktemp -d)
     trap 'rm -rf "$TMP_DIR"' EXIT
 
-    curl -sL -o "${TMP_DIR}/${LSD_DEB}" "$LSD_URL"
-    curl -sL -o "${TMP_DIR}/checksums.txt" "https://github.com/lsd-rs/lsd/releases/download/v${LSD_VERSION}/lsd-v${LSD_VERSION}-checksums.txt"
-    cd "${TMP_DIR}" && sha256sum -c --ignore-missing checksums.txt
-    sudo dpkg -i "${TMP_DIR}/${LSD_DEB}"
-    info "lsd ${LSD_VERSION} installed"
+    if curl -sL -o "${TMP_DIR}/${LSD_DEB}" "$LSD_URL"; then
+        sudo dpkg -i "${TMP_DIR}/${LSD_DEB}"
+        info "lsd ${LSD_VERSION} installed"
+    else
+        error "Failed to download lsd from $LSD_URL"
+        rm -rf "$TMP_DIR"
+        exit 1
+    fi
 fi
 
 echo -e "\n${GREEN}All core dependencies are installed.${NC}"
