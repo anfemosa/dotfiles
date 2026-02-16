@@ -72,4 +72,4 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd -t d --hidden --follow --exclude \".git\" ."
 
 # Refresh homeshick
-$HOME/.homesick/repos/homeshick/bin/homeshick --quiet refresh 2
+$HOME/.homesick/repos/homeshick/bin/homeshick --quiet refresh 1
