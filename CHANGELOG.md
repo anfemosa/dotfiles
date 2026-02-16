@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- `pipx inject` section for flake8 plugins: `flake8-isort`, `flake8-builtins`, `flake8-eradicate`, `flake8-functions-names`, `flake8-return` (from GitHub), and `flake8-functions` (from GitHub fork).
 - `pipx` to apt packages and new pipx section in install.sh for `rocker`, `vcs2l`, and `bandit`.
 - `gh` (GitHub CLI) to install.sh via official GitHub apt repository.
 - `glab` (GitLab CLI) to install.sh via GitLab release binaries.

@@ -75,7 +75,7 @@ fi
 
 # --- pipx packages ---
 
-PIPX_PACKAGES=(rocker vcs2l bandit)
+PIPX_PACKAGES=(rocker vcs2l bandit isort flake8)
 
 for pkg in "${PIPX_PACKAGES[@]}"; do
     if pipx list 2>/dev/null | grep -q "package $pkg"; then
@@ -86,6 +86,45 @@ for pkg in "${PIPX_PACKAGES[@]}"; do
         info "$pkg installed (pipx)"
     fi
 done
+
+# --- pipx inject: flake8 plugins ---
+
+FLAKE8_PLUGINS=(flake8-isort flake8-builtins flake8-eradicate flake8-functions-names)
+FLAKE8_PLUGINS_URL=(
+    "https://github.com/afonasev/flake8-return/archive/refs/heads/master.zip"
+    "https://github.com/tecnalia-advancedmanufacturing-robotics/flake8-functions/archive/refs/heads/replace-ast-str.zip"
+)
+
+if pipx list 2>/dev/null | grep -q "package flake8"; then
+    MISSING_PLUGINS=()
+    for plugin in "${FLAKE8_PLUGINS[@]}"; do
+        if ! pipx runpip flake8 show "$plugin" &> /dev/null; then
+            MISSING_PLUGINS+=("$plugin")
+        else
+            info "flake8 plugin $plugin already injected"
+        fi
+    done
+    if [ ${#MISSING_PLUGINS[@]} -gt 0 ]; then
+        echo -e "\nInjecting flake8 plugins: ${MISSING_PLUGINS[*]}"
+        pipx inject flake8 "${MISSING_PLUGINS[@]}"
+        info "flake8 plugins injected: ${MISSING_PLUGINS[*]}"
+    fi
+
+    # Inject plugins from URLs (check by package name extracted from URL)
+    for url in "${FLAKE8_PLUGINS_URL[@]}"; do
+        # Extract repo name from URL as approximate package identifier
+        pkg_name=$(echo "$url" | grep -oP '(?<=github.com/)[^/]+/[^/]+' | cut -d'/' -f2)
+        if pipx runpip flake8 show "$pkg_name" &> /dev/null; then
+            info "flake8 plugin $pkg_name already injected"
+        else
+            echo -e "\nInjecting flake8 plugin from $url..."
+            pipx inject flake8 "$url"
+            info "flake8 plugin $pkg_name injected"
+        fi
+    done
+else
+    warn "flake8 not installed via pipx, skipping plugin injection"
+fi
 
 # --- lsd (from GitHub release) ---
 
