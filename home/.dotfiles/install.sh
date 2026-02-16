@@ -22,7 +22,7 @@ fi
 
 # --- apt packages ---
 
-APT_PACKAGES=(ripgrep fd-find bat trash-cli direnv)
+APT_PACKAGES=(ripgrep fd-find bat trash-cli direnv shellcheck)
 TO_INSTALL=()
 
 for pkg in "${APT_PACKAGES[@]}"; do
@@ -101,6 +101,60 @@ else
         info "lsd ${LSD_VERSION} installed to ~/.local/bin/lsd"
     else
         error "Failed to download lsd from $LSD_URL"
+        rm -rf "$TMP_DIR"
+        exit 1
+    fi
+fi
+
+# --- gh (GitHub CLI, from official apt repo) ---
+
+if command -v gh &> /dev/null; then
+    info "gh (GitHub CLI) already installed"
+else
+    echo -e "\nInstalling gh (GitHub CLI)..."
+    sudo mkdir -p -m 755 /etc/apt/keyrings
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+    sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    sudo apt-get update -qq
+    sudo apt-get install -y -qq gh
+    info "gh (GitHub CLI) installed"
+fi
+
+# --- glab (GitLab CLI, from GitHub release) ---
+
+if command -v glab &> /dev/null; then
+    info "glab (GitLab CLI) already installed"
+else
+    echo -e "\nInstalling glab (GitLab CLI) from GitHub..."
+    ARCH=$(uname -m)
+    GLAB_VERSION=$(curl -s https://api.github.com/repos/gitlab-org/cli/releases/latest | grep '"tag_name"' | sed 's/.*"v\(.*\)".*/\1/')
+
+    if [ -z "$GLAB_VERSION" ]; then
+        error "Failed to fetch glab latest version from GitHub"
+        exit 1
+    fi
+
+    case "$ARCH" in
+        x86_64)  GLAB_ARCH="Linux_x86_64" ;;
+        aarch64) GLAB_ARCH="Linux_arm64" ;;
+        *)       error "Unsupported architecture: $ARCH"; exit 1 ;;
+    esac
+
+    GLAB_TAR="glab_${GLAB_VERSION}_${GLAB_ARCH}.tar.gz"
+    GLAB_URL="https://gitlab.com/gitlab-org/cli/-/releases/v${GLAB_VERSION}/downloads/${GLAB_TAR}"
+
+    TMP_DIR=$(mktemp -d)
+    trap 'rm -rf "$TMP_DIR"' EXIT
+
+    if curl -sL -o "${TMP_DIR}/${GLAB_TAR}" "$GLAB_URL"; then
+        tar -xzf "${TMP_DIR}/${GLAB_TAR}" -C "${TMP_DIR}"
+        mkdir -p "$HOME/.local/bin"
+        cp "${TMP_DIR}/bin/glab" "$HOME/.local/bin/glab"
+        chmod +x "$HOME/.local/bin/glab"
+        info "glab ${GLAB_VERSION} installed to ~/.local/bin/glab"
+    else
+        error "Failed to download glab from $GLAB_URL"
         rm -rf "$TMP_DIR"
         exit 1
     fi
