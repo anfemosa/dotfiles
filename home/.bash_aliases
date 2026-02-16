@@ -25,3 +25,8 @@ if command -v trash-put &> /dev/null
 then
     alias rm='trash-put'
 fi
+
+if command -v claude &> /dev/null
+then
+    alias c='claude'
+fi
