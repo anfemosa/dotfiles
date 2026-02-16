@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- `pipx` to apt packages and new pipx section in install.sh for `rocker`, `vcs2l`, and `bandit`.
 - `gh` (GitHub CLI) to install.sh via official GitHub apt repository.
 - `glab` (GitLab CLI) to install.sh via GitLab release binaries.
 - `shellcheck` to install.sh apt packages.

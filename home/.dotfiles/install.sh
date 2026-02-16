@@ -22,7 +22,7 @@ fi
 
 # --- apt packages ---
 
-APT_PACKAGES=(ripgrep fd-find bat trash-cli direnv shellcheck tmux)
+APT_PACKAGES=(ripgrep fd-find bat trash-cli direnv shellcheck tmux ruby-mdl pipx)
 TO_INSTALL=()
 
 for pkg in "${APT_PACKAGES[@]}"; do
@@ -72,6 +72,20 @@ if command -v batcat &> /dev/null && ! command -v bat &> /dev/null; then
     ln -s "$(which batcat)" "$HOME/.local/bin/bat"
     info "Created symlink: bat -> batcat"
 fi
+
+# --- pipx packages ---
+
+PIPX_PACKAGES=(rocker vcs2l bandit)
+
+for pkg in "${PIPX_PACKAGES[@]}"; do
+    if pipx list 2>/dev/null | grep -q "package $pkg"; then
+        info "$pkg already installed (pipx)"
+    else
+        echo -e "\nInstalling $pkg with pipx..."
+        pipx install "$pkg"
+        info "$pkg installed (pipx)"
+    fi
+done
 
 # --- lsd (from GitHub release) ---
 
