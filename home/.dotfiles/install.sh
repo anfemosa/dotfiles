@@ -22,7 +22,7 @@ fi
 
 # --- apt packages ---
 
-APT_PACKAGES=(ripgrep fd-find bat trash-cli direnv shellcheck)
+APT_PACKAGES=(ripgrep fd-find bat trash-cli direnv shellcheck tmux)
 TO_INSTALL=()
 
 for pkg in "${APT_PACKAGES[@]}"; do
